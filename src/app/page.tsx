@@ -1,6 +1,6 @@
-import Form from '@/app/components/Form'
-import Link from 'next/link'
- 
+import Form from "@/app/components/Form";
+import Link from "next/link";
+
 export default function Home() {
   return (
     <div>
@@ -8,7 +8,7 @@ export default function Home() {
       {/* <Link href="/about">About</Link> */}
       <Form />
     </div>
-  )
+  );
 }
 
 // classes with many sections
