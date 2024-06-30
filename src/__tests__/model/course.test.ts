@@ -33,7 +33,19 @@ describe("Course", () => {
         let sections = new Map<string, CourseSection>();
         sections.set("A00", section);
 
-        course = new Course(sections);
+        course = new Course("CSE", "100", sections);
+    })
+
+    test("Get department", () => {
+        expect(course.department).toBe("CSE");
+    })
+
+    test("Get code", () => {
+        expect(course.code).toBe("100");
+    })
+
+    test("Get name", () => {
+        expect(course.name).toBe("CSE 100");
     })
 
     test("Get sections", () => {

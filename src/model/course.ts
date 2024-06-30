@@ -1,10 +1,26 @@
 import CourseSection from './course-section';
 
 class Course {
+    private _department: string;
+    private _code: string;
     private _sections: Map<string, CourseSection>;
 
-    constructor(sections: Map<string, CourseSection>) {
+    constructor(department: string, code: string, sections: Map<string, CourseSection>) {
+        this._department = department;
+        this._code = code;
         this._sections = sections;
+    }
+
+    public get department(): string {
+        return this._department;
+    }
+
+    public get code(): string {
+        return this._code;
+    }
+
+    public get name(): string {
+        return `${this.department} ${this.code}`;
     }
 
     public get sections(): Map<string, CourseSection> {
