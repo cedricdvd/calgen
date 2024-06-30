@@ -1,7 +1,7 @@
-import Course from "@/model/course";
-import CourseSection from "@/model/course-section";
-import SectionInfo from "@/model/section-info";
-import ExamInfo from "@/model/exam-info";
+import Course from "@/lib/model/course";
+import CourseSection from "@/lib/model/course-section";
+import SectionInfo from "@/lib/model/section-info";
+import ExamInfo from "@/lib/model/exam-info";
 
 describe("Course", () => {
     let course: Course;

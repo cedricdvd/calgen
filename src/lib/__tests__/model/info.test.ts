@@ -1,5 +1,5 @@
-import SectionInfo from "@/model/section-info";
-import ExamInfo from "@/model/exam-info";
+import SectionInfo from "@/lib/model/section-info";
+import ExamInfo from "@/lib/model/exam-info";
 
 test("SectionInfo constructor", () => {
     const sectionInfo = new SectionInfo("A", "MWF", "12:00-12:50", "CSB", "130");

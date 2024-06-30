@@ -1,9 +1,9 @@
-import ExamInfo from '@/model/exam-info';
+import ExamInfo from '@/lib/model/exam-info';
 import exampleClasses, { ClassDetails, ExamDetails }from '../data/example-data';
 import Course from '../model/course';
-import CourseSection from '@/model/course-section';
-import CourseSectionBuilder from '@/model/course-section-builder';
-import SectionInfo from '@/model/section-info';
+import CourseSection from '@/lib/model/course-section';
+import CourseSectionBuilder from '@/lib/model/course-section-builder';
+import SectionInfo from '@/lib/model/section-info';
 
 class SimpleRepo {
 

@@ -1,5 +1,5 @@
-import SimpleRepo from "@/database/simple-repo";
-import Course from "@/model/course";
+import SimpleRepo from "@/lib/database/simple-repo";
+import Course from "@/lib/model/course";
 
 describe("SimpleRepo", () => {
 

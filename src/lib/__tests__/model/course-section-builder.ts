@@ -1,6 +1,6 @@
-import CourseSectionBuilder from "@/model/course-section-builder";
-import SectionInfo from "@/model/section-info";
-import ExamInfo from "@/model/exam-info";
+import CourseSectionBuilder from "@/lib/model/course-section-builder";
+import SectionInfo from "@/lib/model/section-info";
+import ExamInfo from "@/lib/model/exam-info";
 
 describe("CourseSectionBuilder", () => {
     let builder: CourseSectionBuilder;
