@@ -77,4 +77,29 @@ describe("SimpleRepo", () => {
     expect(cseCourses[0].code).toBe("120");
     expect(cseCourses[1].code).toBe("170");
   });
+
+  test("Get departments", () => {
+    let course1 = new Course("CSE", "100", new Map());
+    let course2 = new Course("CSE", "101", new Map());
+    let course3 = new Course("MATH", "20C", new Map());
+
+    repo.addCourse("CSE 100", course1);
+    repo.addCourse("CSE 101", course2);
+    repo.addCourse("MATH 20C", course3);
+
+    expect(repo.getDepartments()).toEqual(["CSE", "MATH"]);
+  });
+
+  test("Get course numbers", () => {
+    let course1 = new Course("CSE", "100", new Map());
+    let course2 = new Course("CSE", "101", new Map());
+    let course3 = new Course("MATH", "20C", new Map());
+
+    repo.addCourse("CSE 100", course1);
+    repo.addCourse("CSE 101", course2);
+    repo.addCourse("MATH 20C", course3);
+
+    expect(repo.getCourseNumbers("CSE")).toEqual(["100", "101"]);
+    expect(repo.getCourseNumbers("MATH")).toEqual(["20C"]);
+  });
 });

@@ -41,6 +41,22 @@ class SimpleRepo {
     return this.courses.size;
   }
 
+  public getDepartments(): string[] {
+    let departments = new Set<string>();
+    this.courses.forEach((course) => departments.add(course.department));
+    return Array.from(departments);
+  }
+
+  public getCourseNumbers(department: string): string[] {
+    let courseNumbers = new Set<string>();
+    this.courses.forEach((course, courseName) => {
+      if (course.department === department) {
+        courseNumbers.add(courseName.split(" ")[1]);
+      }
+    });
+    return Array.from(courseNumbers);
+  }
+
   public fillExampleClasses(): void {
     for (const courseName in exampleClasses) {
       let sections = new Map<string, CourseSection>();

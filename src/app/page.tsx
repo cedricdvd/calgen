@@ -1,12 +1,14 @@
-import Form from "@/app/components/Form";
 import Link from "next/link";
+import SimpleRepo from "@/lib/database/simple-repo";
+import Course from "@/lib/model/course";
+import CourseForm from "./components/CourseForm/CourseForm";
 
 export default function Home() {
   return (
     <div>
       <h1>Home</h1>
       {/* <Link href="/about">About</Link> */}
-      <Form />
+      <CourseForm />
     </div>
   );
 }
