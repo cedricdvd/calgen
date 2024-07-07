@@ -29,3 +29,14 @@ test("ExamInfo constructor", () => {
   expect(examInfo.building).toBe("CSB");
   expect(examInfo.room).toBe("130");
 });
+
+test("ExamInfo fromExamInfo", () => {
+  const examInfo = new ExamInfo("12/15/2020", "T", "12:00-2:00", "CSB", "130");
+  const newExamInfo = ExamInfo.fromExamInfo(examInfo);
+  expect(newExamInfo.date).toBe("12/15/2020");
+  expect(newExamInfo.days).toBe("T");
+  expect(newExamInfo.time).toBe("12:00-2:00");
+  expect(newExamInfo.building).toBe("CSB");
+  expect(newExamInfo.room).toBe("130");
+  expect(newExamInfo).not.toBe(examInfo);
+});

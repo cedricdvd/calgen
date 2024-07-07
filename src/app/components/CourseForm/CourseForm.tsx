@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import SimpleRepo from "@/lib/database/simple-repo";
 import Course from "@/lib/model/course";
@@ -7,6 +9,7 @@ import CourseDetails from "./CourseDetails";
 import SectionDetails from "./SectionDetails";
 import CourseSectionBuilder from "@/lib/model/course-section-builder";
 import SectionInfo from "@/lib/model/section-info";
+import ExamInfo from "@/lib/model/exam-info";
 
 function CourseForm() {
   const courseRepo = new SimpleRepo();
@@ -25,6 +28,13 @@ function CourseForm() {
 
   function handleSelect(setSelected: (value: string) => void, value: string) {
     setSelected(value);
+
+    if (setSelected === setCourseNumber) {
+      setCourse(courseRepo.getCourse(`${department} ${value}`));
+    } else if (setSelected === setSectionNumber) {
+      setSection(course?.getSection(value));
+    }
+
     resetSelections(setSelected);
   }
 
@@ -35,6 +45,8 @@ function CourseForm() {
       setDiscussionSection("");
       setLabSection("");
       setStudioSection("");
+      setCourse(undefined);
+      setSection(undefined);
     }
 
     if (setSelected === setCourseNumber) {
@@ -42,6 +54,7 @@ function CourseForm() {
       setDiscussionSection("");
       setLabSection("");
       setStudioSection("");
+      setSection(undefined);
     }
 
     if (setSelected === setSectionNumber) {
@@ -51,97 +64,74 @@ function CourseForm() {
     }
   }
 
-  function onSubmitCourse(e: React.FormEvent<HTMLFormElement>) {
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log(department, courseNumber);
-    const course = courseRepo.getCourse(`${department} ${courseNumber}`);
-    if (course) {
-      console.log(course);
-      setCourse(course);
-    } else {
-      console.log("SubmitCourse: Course not found");
-      setSection(undefined);
-      setCourse(undefined);
-    }
-  }
 
-  function onSubmitSection(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (course === undefined) {
-      console.log("SubmitSection: Course not found");
+    if (
+      department === "" ||
+      courseNumber === "" ||
+      sectionNumber === "" ||
+      (discussionSection === "" && labSection === "" && studioSection === "")
+    ) {
+      console.log("onSubmit: Missing required fields");
       return;
     }
 
-    const section = course.getSection(sectionNumber);
-    if (section) {
-      console.log(section);
-      setSection(section);
-    } else {
-      console.log("SubmitSection: Section not found");
-      setSection(undefined);
-    }
-  }
-
-  function onSubmitSectionPart(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (section === undefined) {
-      console.log("SubmitSectionPart: Section not found");
+    if (course === undefined || section === undefined) {
+      console.log("onSubmit: Invalid course or section");
       return;
     }
 
-    if (discussionSection === "" && labSection === "" && studioSection === "") {
-      console.log("SubmitSectionPart: No section parts selected");
-      return;
-    }
+    const newSection = new CourseSectionBuilder();
 
-    console.log("Course:", department, courseNumber);
-    console.log("Section:", sectionNumber);
-
-    const sectionBuilder = new CourseSectionBuilder();
-    sectionBuilder.withSection(sectionNumber);
-    sectionBuilder.withLecture(SectionInfo.fromSectionInfo(section.lecture));
+    newSection.withSection(sectionNumber);
+    newSection.withLecture(SectionInfo.fromSectionInfo(section.lecture));
 
     if (discussionSection !== "") {
-      console.log("Discussion:", discussionSection);
       const discussion = section.discussions.get(discussionSection);
       if (discussion === undefined) {
+        console.log("onSubmit: Discussion not found");
         return;
       }
 
-      sectionBuilder.withDiscussions(
+      newSection.withDiscussions(
         new Map([[discussionSection, SectionInfo.fromSectionInfo(discussion)]]),
       );
     }
 
     if (labSection !== "") {
-      console.log("Lab:", labSection);
       const lab = section.labs.get(labSection);
       if (lab === undefined) {
+        console.log("onSubmit: Lab not found");
         return;
       }
 
-      sectionBuilder.withLabs(
+      newSection.withLabs(
         new Map([[labSection, SectionInfo.fromSectionInfo(lab)]]),
       );
     }
 
     if (studioSection !== "") {
-      console.log("Studio:", studioSection);
       const studio = section.studio.get(studioSection);
       if (studio === undefined) {
+        console.log("onSubmit: Studio not found");
         return;
       }
 
-      sectionBuilder.withStudio(
+      newSection.withStudio(
         new Map([[studioSection, SectionInfo.fromSectionInfo(studio)]]),
       );
     }
 
-    const newSection = sectionBuilder.build();
+    newSection.withMidterms(
+      section.midterms.map((midterm) => ExamInfo.fromExamInfo(midterm)),
+    );
+    newSection.withFinal(ExamInfo.fromExamInfo(section.final));
+
     const newClass = new Course(
       department,
       courseNumber,
-      new Map([[sectionNumber, newSection]]),
+      new Map([[sectionNumber, newSection.build()]]),
     );
 
     console.log(newClass);
@@ -149,7 +139,7 @@ function CourseForm() {
 
   return (
     <div>
-      <form onSubmit={onSubmitCourse} role="form">
+      <form onSubmit={onSubmit} role="form">
         <CourseDetails
           repo={courseRepo}
           department={department}
@@ -159,23 +149,16 @@ function CourseForm() {
           handleSelect={handleSelect}
         />
 
-        <button type="submit">Submit</button>
-      </form>
-
-      {course !== undefined && (
-        <form onSubmit={onSubmitSection} role="form">
+        {course !== undefined && (
           <LectureDetails
             course={course}
             sectionTitle={sectionNumber}
             setSectionTitle={setSectionNumber}
             handleSelect={handleSelect}
           />
-          <button type="submit">Submit</button>
-        </form>
-      )}
+        )}
 
-      {section !== undefined && (
-        <form onSubmit={onSubmitSectionPart} role="form">
+        {section !== undefined && (
           <SectionDetails
             section={section}
             discussionSection={discussionSection}
@@ -185,9 +168,9 @@ function CourseForm() {
             setLabSection={setLabSection}
             setStudioSection={setStudioSection}
           />
-          <button type="submit">Submit</button>
-        </form>
-      )}
+        )}
+        <button type="submit">Submit</button>
+      </form>
     </div>
   );
 }

@@ -38,6 +38,16 @@ class ExamInfo {
   public get room(): string {
     return this._room;
   }
+
+  public static fromExamInfo(examInfo: ExamInfo): ExamInfo {
+    return new ExamInfo(
+      examInfo.date,
+      examInfo.days,
+      examInfo.time,
+      examInfo.building,
+      examInfo.room,
+    );
+  }
 }
 
 export default ExamInfo;
