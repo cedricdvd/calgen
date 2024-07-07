@@ -9,4 +9,10 @@ describe("CourseForm", () => {
   // - onSubmitCourse allows us to select LectureDetails
   // - onSubmitSectionPart allows us to select SectionParts
   // - onSubmitSelectionPart finalizes a course object
+
+  it("renders", () => {
+    render(<CourseForm />);
+    const form = screen.getByRole("form");
+    expect(form).toBeInTheDocument();
+  });
 });

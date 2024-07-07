@@ -5,12 +5,14 @@ interface LectureDetailsProps {
   course: Course;
   sectionTitle: string;
   setSectionTitle: (value: string) => void;
+  handleSelect: (setSelected: (value: string) => void, value: string) => void;
 }
 
 function LectureDetails({
-  course: course,
-  sectionTitle: sectionTitle,
-  setSectionTitle: setSectionTitle,
+  course,
+  sectionTitle,
+  setSectionTitle,
+  handleSelect,
 }: LectureDetailsProps) {
   return (
     <div>
@@ -18,6 +20,7 @@ function LectureDetails({
         options={course.getSectionNumbers()}
         selected={sectionTitle}
         setSelected={setSectionTitle}
+        handleSelected={handleSelect}
         disabledMessage={"Select a section"}
       />
     </div>

@@ -10,6 +10,17 @@ test("SectionInfo constructor", () => {
   expect(sectionInfo.room).toBe("130");
 });
 
+test("SectionInfo fromSectionInfo", () => {
+  const sectionInfo = new SectionInfo("A", "MWF", "12:00-12:50", "CSB", "130");
+  const newSectionInfo = SectionInfo.fromSectionInfo(sectionInfo);
+  expect(newSectionInfo.section).toBe("A");
+  expect(newSectionInfo.days).toBe("MWF");
+  expect(newSectionInfo.time).toBe("12:00-12:50");
+  expect(newSectionInfo.building).toBe("CSB");
+  expect(newSectionInfo.room).toBe("130");
+  expect(newSectionInfo).not.toBe(sectionInfo);
+});
+
 test("ExamInfo constructor", () => {
   const examInfo = new ExamInfo("12/15/2020", "T", "12:00-2:00", "CSB", "130");
   expect(examInfo.date).toBe("12/15/2020");

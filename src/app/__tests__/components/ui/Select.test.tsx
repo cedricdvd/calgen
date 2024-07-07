@@ -9,6 +9,7 @@ describe("Select", () => {
         options={["Option 1", "Option 2"]}
         selected={"Option 1"}
         setSelected={() => {}}
+        handleSelected={() => {}}
         disabledMessage={"Select a random option"}
       />,
     );
@@ -24,18 +25,23 @@ describe("Select", () => {
   });
 
   it("calls setSelected when an option is selected", () => {
-    const setSelected = jest.fn();
+    const setSelected = jest.fn((x) => x);
+
+    const handleSelected = jest.fn((setValue, value) => setValue(value));
 
     render(
       <Select
         options={["Option 1", "Option 2"]}
         selected={"Option 1"}
         setSelected={setSelected}
+        handleSelected={handleSelected}
       />,
     );
 
     const select = screen.getByRole("combobox");
     fireEvent.change(select, { target: { value: "Option 2" } });
+    expect(handleSelected).toHaveBeenCalledWith(setSelected, "Option 2");
     expect(setSelected).toHaveBeenCalledWith("Option 2");
+    expect(setSelected).toHaveReturnedWith("Option 2");
   });
 });

@@ -20,6 +20,10 @@ function SectionDetails({
   setLabSection,
   setStudioSection,
 }: SectionDetailsProps) {
+  function handleSelect(setSelected: (value: string) => void, value: string) {
+    setSelected(value);
+  }
+
   return (
     <div>
       {section.getNumberOfDiscussions() > 0 && (
@@ -27,6 +31,7 @@ function SectionDetails({
           options={section.getDiscussionSections()}
           selected={discussionSection}
           setSelected={setDiscussionSection}
+          handleSelected={handleSelect}
           disabledMessage={"Select a discussion section"}
         />
       )}
@@ -35,6 +40,7 @@ function SectionDetails({
           options={section.getLabSections()}
           selected={labSection}
           setSelected={setLabSection}
+          handleSelected={handleSelect}
           disabledMessage={"Select a lab section"}
         />
       )}
@@ -43,6 +49,7 @@ function SectionDetails({
           options={section.getStudioSections()}
           selected={studioSection}
           setSelected={setStudioSection}
+          handleSelected={handleSelect}
           disabledMessage={"Select a studio section"}
         />
       )}

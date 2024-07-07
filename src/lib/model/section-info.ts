@@ -38,6 +38,16 @@ class SectionInfo {
   public get room(): string {
     return this._room;
   }
+
+  public static fromSectionInfo(info: SectionInfo): SectionInfo {
+    return new SectionInfo(
+      info.section,
+      info.days,
+      info.time,
+      info.building,
+      info.room,
+    );
+  }
 }
 
 export default SectionInfo;

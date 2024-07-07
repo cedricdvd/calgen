@@ -8,12 +8,14 @@ describe("CourseDetails", () => {
   let repo: SimpleRepo;
   let setDepartment: jest.Mock;
   let setCourseNumber: jest.Mock;
+  let handleSelect: jest.Mock;
 
   beforeEach(() => {
     repo = new SimpleRepo();
     repo.fillExampleClasses();
-    setDepartment = jest.fn();
-    setCourseNumber = jest.fn();
+    setDepartment = jest.fn((x) => x);
+    setCourseNumber = jest.fn((x) => x);
+    handleSelect = jest.fn((setValue, value) => setValue(value));
   });
 
   it("renders a select", () => {
@@ -24,6 +26,7 @@ describe("CourseDetails", () => {
         setDepartment={setDepartment}
         courseNumber=""
         setCourseNumber={setCourseNumber}
+        handleSelect={handleSelect}
       />,
     );
     const select = screen.getByRole("combobox");
@@ -40,6 +43,7 @@ describe("CourseDetails", () => {
         setDepartment={setDepartment}
         courseNumber=""
         setCourseNumber={setCourseNumber}
+        handleSelect={handleSelect}
       />,
     );
     const options = screen.getAllByRole("option");
@@ -58,13 +62,16 @@ describe("CourseDetails", () => {
         setDepartment={setDepartment}
         courseNumber=""
         setCourseNumber={setCourseNumber}
+        handleSelect={handleSelect}
       />,
     );
     fireEvent.change(screen.getByRole("combobox"), {
       target: { value: "CSE" },
     });
 
+    expect(handleSelect).toHaveBeenCalledWith(setDepartment, "CSE");
     expect(setDepartment).toHaveBeenCalledWith("CSE");
+    expect(setDepartment).toHaveReturnedWith("CSE");
   });
 
   it("renders a second select", () => {
@@ -75,6 +82,7 @@ describe("CourseDetails", () => {
         setDepartment={setDepartment}
         courseNumber=""
         setCourseNumber={setCourseNumber}
+        handleSelect={handleSelect}
       />,
     );
 
@@ -104,6 +112,8 @@ describe("CourseDetails", () => {
       target: { value: "120" },
     });
 
+    expect(handleSelect).toHaveBeenCalledWith(setCourseNumber, "120");
     expect(setCourseNumber).toHaveBeenCalledWith("120");
+    expect(setCourseNumber).toHaveReturnedWith("120");
   });
 });

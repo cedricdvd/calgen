@@ -7,6 +7,7 @@ interface CourseDetailsProps {
   setDepartment: (value: string) => void;
   courseNumber: string;
   setCourseNumber: (value: string) => void;
+  handleSelect: (setSelected: (value: string) => void, value: string) => void;
 }
 
 function CourseDetails({
@@ -15,6 +16,7 @@ function CourseDetails({
   setDepartment,
   courseNumber,
   setCourseNumber,
+  handleSelect,
 }: CourseDetailsProps) {
   return (
     <div>
@@ -22,6 +24,7 @@ function CourseDetails({
         options={repo.getDepartments()}
         selected={department}
         setSelected={setDepartment}
+        handleSelected={handleSelect}
         disabledMessage={"Select a department"}
       />
       {department !== "" && (
@@ -29,6 +32,7 @@ function CourseDetails({
           options={repo.getCourseNumbers(department)}
           selected={courseNumber}
           setSelected={setCourseNumber}
+          handleSelected={handleSelect}
           disabledMessage={"Select a course number"}
         />
       )}

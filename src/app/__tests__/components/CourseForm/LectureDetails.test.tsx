@@ -6,15 +6,23 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
 describe("LectureDetails", () => {
+  let setSectionTitle: jest.Mock;
+  let handleSelect: jest.Mock;
+
+  beforeEach(() => {
+    setSectionTitle = jest.fn((x) => x);
+    handleSelect = jest.fn((setValue, value) => setValue(value));
+  });
+
   it("renders a select element", () => {
     let course = new Course("CSE", "100", new Map());
-    let setSectionTitle = jest.fn();
 
     render(
       <LectureDetails
         course={course}
         sectionTitle={"1"}
         setSectionTitle={setSectionTitle}
+        handleSelect={handleSelect}
       />,
     );
 
@@ -32,13 +40,12 @@ describe("LectureDetails", () => {
       ]),
     );
 
-    let setSectionTitle = jest.fn();
-
     render(
       <LectureDetails
         course={course}
         sectionTitle={"1"}
         setSectionTitle={setSectionTitle}
+        handleSelect={handleSelect}
       />,
     );
 
@@ -52,6 +59,8 @@ describe("LectureDetails", () => {
       target: { value: "B00" },
     });
 
+    expect(handleSelect).toHaveBeenCalledWith(setSectionTitle, "B00");
     expect(setSectionTitle).toHaveBeenCalledWith("B00");
+    expect(setSectionTitle).toHaveReturnedWith("B00");
   });
 });
