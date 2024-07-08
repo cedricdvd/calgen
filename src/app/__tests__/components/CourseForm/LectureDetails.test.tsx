@@ -1,17 +1,20 @@
+import { render, screen } from "@testing-library/react";
+import userEvent, { UserEvent } from "@testing-library/user-event";
+import "@testing-library/jest-dom";
+
 import Course from "@/lib/model/course";
-import CourseSection from "@/lib/model/course-section";
 import CourseSectionBuilder from "@/lib/model/course-section-builder";
 import LectureDetails from "@/app/components/CourseForm/LectureDetails";
-import { render, screen, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom";
 
 describe("LectureDetails", () => {
   let setSectionTitle: jest.Mock;
   let handleSelect: jest.Mock;
+  let user: UserEvent;
 
   beforeEach(() => {
     setSectionTitle = jest.fn((x) => x);
     handleSelect = jest.fn((setValue, value) => setValue(value));
+    user = userEvent.setup();
   });
 
   it("renders a select element", () => {
@@ -30,7 +33,7 @@ describe("LectureDetails", () => {
     expect(select).toBeInTheDocument();
   });
 
-  it("renders correct options", () => {
+  it("renders correct options", async () => {
     let course = new Course(
       "CSE",
       "100",
@@ -55,9 +58,7 @@ describe("LectureDetails", () => {
     expect(options[1]).toHaveTextContent("A00");
     expect(options[2]).toHaveTextContent("B00");
 
-    fireEvent.change(screen.getByRole("combobox"), {
-      target: { value: "B00" },
-    });
+    await user.selectOptions(screen.getByRole("combobox"), "B00");
 
     expect(handleSelect).toHaveBeenCalledWith(setSectionTitle, "B00");
     expect(setSectionTitle).toHaveBeenCalledWith("B00");

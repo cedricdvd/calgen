@@ -1,7 +1,8 @@
-import CourseDetails from "@/app/components/CourseForm/CourseDetails";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
+import CourseDetails from "@/app/components/CourseForm/CourseDetails";
 import SimpleRepo from "@/lib/database/simple-repo";
 
 describe("CourseDetails", () => {
@@ -9,6 +10,7 @@ describe("CourseDetails", () => {
   let setDepartment: jest.Mock;
   let setCourseNumber: jest.Mock;
   let handleSelect: jest.Mock;
+  let user: UserEvent;
 
   beforeEach(() => {
     repo = new SimpleRepo();
@@ -16,6 +18,7 @@ describe("CourseDetails", () => {
     setDepartment = jest.fn((x) => x);
     setCourseNumber = jest.fn((x) => x);
     handleSelect = jest.fn((setValue, value) => setValue(value));
+    user = userEvent.setup();
   });
 
   it("renders a select", () => {
@@ -54,7 +57,7 @@ describe("CourseDetails", () => {
     expect(options[3]).toHaveTextContent("CSE");
   });
 
-  it("calls setDepartment", () => {
+  it("calls setDepartment", async () => {
     render(
       <CourseDetails
         repo={repo}
@@ -65,16 +68,15 @@ describe("CourseDetails", () => {
         handleSelect={handleSelect}
       />,
     );
-    fireEvent.change(screen.getByRole("combobox"), {
-      target: { value: "CSE" },
-    });
+
+    await user.selectOptions(screen.getByRole("combobox"), "CSE");
 
     expect(handleSelect).toHaveBeenCalledWith(setDepartment, "CSE");
     expect(setDepartment).toHaveBeenCalledWith("CSE");
     expect(setDepartment).toHaveReturnedWith("CSE");
   });
 
-  it("renders a second select", () => {
+  it("renders a second select", async () => {
     render(
       <CourseDetails
         repo={repo}
@@ -89,14 +91,13 @@ describe("CourseDetails", () => {
     const selects = screen.getAllByRole("combobox");
     expect(selects).toHaveLength(2);
 
-    fireEvent.change(screen.getAllByRole("combobox")[0], {
-      target: { value: "CSE" },
-    });
+    const departmentSelect = selects[0];
+    await user.selectOptions(departmentSelect, "CSE");
 
-    const select = screen.getAllByRole("combobox")[1];
-    expect(select).toBeInTheDocument();
-    expect(select).toHaveLength(3);
-    expect(select).toHaveTextContent("Select a course number");
+    const courseSelect = selects[1];
+    expect(courseSelect).toBeInTheDocument();
+    expect(courseSelect).toHaveLength(3);
+    expect(courseSelect).toHaveTextContent("Select a course number");
 
     const options = screen.getAllByRole("option");
     expect(options).toHaveLength(7);
@@ -108,9 +109,7 @@ describe("CourseDetails", () => {
     expect(options[5]).toHaveTextContent("120");
     expect(options[6]).toHaveTextContent("170");
 
-    fireEvent.change(screen.getAllByRole("combobox")[1], {
-      target: { value: "120" },
-    });
+    await user.selectOptions(courseSelect, "120");
 
     expect(handleSelect).toHaveBeenCalledWith(setCourseNumber, "120");
     expect(setCourseNumber).toHaveBeenCalledWith("120");

@@ -1,6 +1,8 @@
-import Select from "@/app/components/ui/Select";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
+
+import Select from "@/app/components/ui/Select";
 
 describe("Select", () => {
   it("renders a select element", () => {
@@ -24,10 +26,10 @@ describe("Select", () => {
     expect(options[2]).toHaveTextContent("Option 2");
   });
 
-  it("calls setSelected when an option is selected", () => {
+  it("calls setSelected when an option is selected", async () => {
     const setSelected = jest.fn((x) => x);
-
     const handleSelected = jest.fn((setValue, value) => setValue(value));
+    const user = userEvent.setup();
 
     render(
       <Select
@@ -38,8 +40,7 @@ describe("Select", () => {
       />,
     );
 
-    const select = screen.getByRole("combobox");
-    fireEvent.change(select, { target: { value: "Option 2" } });
+    await user.selectOptions(screen.getByRole("combobox"), "Option 2");
     expect(handleSelected).toHaveBeenCalledWith(setSelected, "Option 2");
     expect(setSelected).toHaveBeenCalledWith("Option 2");
     expect(setSelected).toHaveReturnedWith("Option 2");

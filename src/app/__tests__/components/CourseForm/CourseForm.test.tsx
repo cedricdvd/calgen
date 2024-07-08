@@ -1,4 +1,5 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
 import CourseForm from "@/app/components/CourseForm/CourseForm";
@@ -8,6 +9,7 @@ describe("CourseForm", () => {
   // onSubmit branching
   // handleSelect branching
   // resetSelections branching
+  const user: UserEvent = userEvent.setup();
 
   it("renders", () => {
     render(<CourseForm />);
@@ -18,58 +20,149 @@ describe("CourseForm", () => {
     expect(selects.length).toBe(1);
   });
 
-  it("Once department and course are selected, LectureDetails are shown", () => {
-    render(<CourseForm />);
-    let selects = screen.getAllByRole("combobox");
-    let department = selects[0];
-    fireEvent.change(department, { target: { value: "CSE" } });
+  describe("Course selection", () => {
+    it("Once department and course are selected, LectureDetails are shown", async () => {
+      render(<CourseForm />);
+      let selects = screen.getAllByRole("combobox");
+      let department = selects[0];
+      await user.selectOptions(department, "CSE");
 
-    selects = screen.getAllByRole("combobox");
-    let course = selects[1];
+      selects = screen.getAllByRole("combobox");
+      let course = selects[1];
 
-    fireEvent.change(course, { target: { value: "120" } });
+      await user.selectOptions(course, "120");
 
-    selects = screen.getAllByRole("combobox");
-    expect(selects.length).toBe(3);
+      selects = screen.getAllByRole("combobox");
+      expect(selects.length).toBe(3);
+    });
+
+    it("Once LectureDetails are selected, SectionDetails are shown", async () => {
+      render(<CourseForm />);
+      let selects = screen.getAllByRole("combobox");
+      let department = selects[0];
+      await user.selectOptions(department, "COGS");
+
+      selects = screen.getAllByRole("combobox");
+      let course = selects[1];
+
+      await user.selectOptions(course, "108");
+
+      selects = screen.getAllByRole("combobox");
+      let lecture = selects[2];
+      await user.selectOptions(lecture, "A00");
+      selects = screen.getAllByRole("combobox");
+      expect(selects.length).toBe(4);
+    });
+
+    it("Once SectionDetails are selected, the course is finalized", async () => {
+      render(<CourseForm />);
+      let selects = screen.getAllByRole("combobox");
+      let department = selects[0];
+      await user.selectOptions(department, "COGS");
+
+      selects = screen.getAllByRole("combobox");
+      let course = selects[1];
+      await user.selectOptions(course, "108");
+
+      selects = screen.getAllByRole("combobox");
+      let lecture = selects[2];
+      await user.selectOptions(lecture, "A00");
+
+      selects = screen.getAllByRole("combobox");
+      let section = selects[3];
+      await user.selectOptions(section, "A01");
+
+      const submit = screen.getByRole("button");
+      await user.click(submit);
+    });
   });
 
-  it("Once LectureDetails are selected, SectionDetails are shown", () => {
-    render(<CourseForm />);
-    let selects = screen.getAllByRole("combobox");
-    let department = selects[0];
-    fireEvent.change(department, { target: { value: "COGS" } });
+  describe("resetSelection Branching", () => {
+    beforeEach(async () => {
+      render(<CourseForm />);
+    });
 
-    selects = screen.getAllByRole("combobox");
-    let course = selects[1];
+    it("resetSelections if department", async () => {
+      let selects = screen.getAllByRole("combobox");
+      let department = selects[0];
+      await user.selectOptions(department, "COGS");
 
-    fireEvent.change(course, { target: { value: "108" } });
+      selects = screen.getAllByRole("combobox");
+      let course = selects[1];
+      await user.selectOptions(course, "108");
 
-    selects = screen.getAllByRole("combobox");
-    let lecture = selects[2];
-    fireEvent.change(lecture, { target: { value: "A00" } });
-    selects = screen.getAllByRole("combobox");
-    expect(selects.length).toBe(4);
-  });
+      selects = screen.getAllByRole("combobox");
+      let lecture = selects[2];
+      await user.selectOptions(lecture, "A00");
 
-  it("Once SectionDetails are selected, the course is finalized", () => {
-    render(<CourseForm />);
-    let selects = screen.getAllByRole("combobox");
-    let department = selects[0];
-    fireEvent.change(department, { target: { value: "COGS" } });
+      selects = screen.getAllByRole("combobox");
+      let section = selects[3];
+      await user.selectOptions(section, "A01");
 
-    selects = screen.getAllByRole("combobox");
-    let course = selects[1];
-    fireEvent.change(course, { target: { value: "108" } });
+      selects = screen.getAllByRole("combobox");
+      department = selects[0];
 
-    selects = screen.getAllByRole("combobox");
-    let lecture = selects[2];
-    fireEvent.change(lecture, { target: { value: "A00" } });
+      await user.selectOptions(department, "MATH");
+      selects = screen.getAllByRole("combobox");
 
-    selects = screen.getAllByRole("combobox");
-    let section = selects[3];
-    fireEvent.change(section, { target: { value: "A01" } });
+      expect(selects.length).toBe(2);
+      expect(selects[0]).toHaveValue("MATH");
+      expect(selects[1]).toHaveValue("");
+    });
 
-    const submit = screen.getByRole("button");
-    fireEvent.click(submit);
+    it("resetSelections if courseNum changes", async () => {
+      let selects = screen.getAllByRole("combobox");
+      let department = selects[0];
+      await user.selectOptions(department, "CSE");
+
+      selects = screen.getAllByRole("combobox");
+      let course = selects[1];
+      await user.selectOptions(course, "120");
+
+      selects = screen.getAllByRole("combobox");
+      let lecture = selects[2];
+      await user.selectOptions(lecture, "A00");
+
+      selects = screen.getAllByRole("combobox");
+      let section = selects[3];
+      await user.selectOptions(section, "A01");
+
+      course = selects[1];
+      await user.selectOptions(course, "170");
+      selects = screen.getAllByRole("combobox");
+
+      expect(selects.length).toBe(3);
+      expect(selects[0]).toHaveValue("CSE");
+      expect(selects[1]).toHaveValue("170");
+      expect(selects[2]).toHaveValue("");
+    });
+
+    it("resetSelections if section changes", async () => {
+      let selects = screen.getAllByRole("combobox");
+      let department = selects[0];
+      await user.selectOptions(department, "MATH");
+
+      selects = screen.getAllByRole("combobox");
+      let course = selects[1];
+      await user.selectOptions(course, "20C");
+
+      selects = screen.getAllByRole("combobox");
+      let lecture = selects[2];
+      await user.selectOptions(lecture, "A00");
+
+      selects = screen.getAllByRole("combobox");
+      let section = selects[3];
+      await user.selectOptions(section, "A01");
+
+      lecture = selects[2];
+      await user.selectOptions(lecture, "B00");
+      selects = screen.getAllByRole("combobox");
+
+      expect(selects.length).toBe(4);
+      expect(selects[0]).toHaveValue("MATH");
+      expect(selects[1]).toHaveValue("20C");
+      expect(selects[2]).toHaveValue("B00");
+      expect(selects[3]).toHaveValue("");
+    });
   });
 });

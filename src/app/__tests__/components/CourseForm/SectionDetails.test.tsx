@@ -1,4 +1,5 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
 import SimpleRepo from "@/lib/database/simple-repo";
@@ -12,12 +13,14 @@ describe("SectionDetails", () => {
   let setDiscussionSection: jest.Mock;
   let setLabSection: jest.Mock;
   let setStudioSection: jest.Mock;
+  let user: UserEvent;
 
   beforeEach(() => {
     section = new CourseSectionBuilder().withSection("A00").build();
     setDiscussionSection = jest.fn();
     setLabSection = jest.fn();
     setStudioSection = jest.fn();
+    user = userEvent.setup();
   });
 
   it("renders a select element", () => {
@@ -37,7 +40,7 @@ describe("SectionDetails", () => {
     expect(select).toBeNull();
   });
 
-  it("renders correct discussion", () => {
+  it("renders correct discussion", async () => {
     section = new CourseSectionBuilder()
       .withDiscussions(
         new Map([
@@ -63,14 +66,12 @@ describe("SectionDetails", () => {
     const options = screen.getAllByRole("option");
     expect(options).toHaveLength(3);
 
-    fireEvent.change(select, {
-      target: { value: "A01" },
-    });
+    await user.selectOptions(select, "A01");
 
     expect(setDiscussionSection).toHaveBeenCalledWith("A01");
   });
 
-  it("renders correct lab", () => {
+  it("renders correct lab", async () => {
     section = new CourseSectionBuilder()
       .withLabs(
         new Map([
@@ -96,14 +97,11 @@ describe("SectionDetails", () => {
     const options = screen.getAllByRole("option");
     expect(options).toHaveLength(3);
 
-    fireEvent.change(select, {
-      target: { value: "A01" },
-    });
-
+    await user.selectOptions(select, "A01");
     expect(setLabSection).toHaveBeenCalledWith("A01");
   });
 
-  it("renders correct studio", () => {
+  it("renders correct studio", async () => {
     section = new CourseSectionBuilder()
       .withStudio(
         new Map([
@@ -129,10 +127,7 @@ describe("SectionDetails", () => {
     const options = screen.getAllByRole("option");
     expect(options).toHaveLength(3);
 
-    fireEvent.change(select, {
-      target: { value: "A01" },
-    });
-
+    await user.selectOptions(select, "A01");
     expect(setStudioSection).toHaveBeenCalledWith("A01");
   });
 });
