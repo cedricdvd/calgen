@@ -16,6 +16,7 @@ describe("Test Exam", () => {
     expect(exam.timeOfDay).toBe("9:00AM-11:00AM");
     expect(exam.building).toBe("CSB");
     expect(exam.room).toBe("130");
+    expect(exam.location).toBe("CSB 130");
   });
 
   test("Test Exam Getters Final", () => {
@@ -33,5 +34,6 @@ describe("Test Exam", () => {
     expect(exam.timeOfDay).toBe("9:00AM-11:00AM");
     expect(exam.building).toBe("CSB");
     expect(exam.room).toBe("130");
+    expect(exam.location).toBe("CSB 130");
   });
 });
