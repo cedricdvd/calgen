@@ -7,7 +7,8 @@ interface ExamItemProps {
 
 function ExamItem({ examType, exam }: ExamItemProps) {
   return (
-    <div className="grid-container">
+    <div className="grid-row">
+      <div className="grid-item"></div>
       <div className="grid-item">{examType}</div>
       <div className="grid-item">{exam.date}</div>
       <div className="grid-item">{exam.days}</div>

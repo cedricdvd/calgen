@@ -14,13 +14,22 @@ describe("SectionItem", () => {
       "115",
     );
 
+    const courseName = "CSE 105";
     const sectionType = "DI";
-    render(<SectionItem sectionType={sectionType} section={section} />);
+    render(
+      <SectionItem
+        courseName={courseName}
+        sectionType={sectionType}
+        section={section}
+      />,
+    );
 
-    const textItems = ["DI", "A01", "MWF", "10:00-10:50p", "CENTR", "115"];
-
-    for (const textItem of textItems) {
-      expect(screen.getByText(textItem)).toBeInTheDocument();
-    }
+    expect(screen.getByText("CSE 105")).toBeInTheDocument();
+    expect(screen.getByText("DI")).toBeInTheDocument();
+    expect(screen.getByText("A01")).toBeInTheDocument();
+    expect(screen.getByText("MWF")).toBeInTheDocument();
+    expect(screen.getByText("10:00-10:50p")).toBeInTheDocument();
+    expect(screen.getByText("CENTR")).toBeInTheDocument();
+    expect(screen.getByText("115")).toBeInTheDocument();
   });
 });

@@ -1,13 +1,15 @@
 import SectionInfo from "@/lib/model/section-info";
 
 interface SectionItemProps {
+  courseName: string;
   sectionType: string;
   section: SectionInfo;
 }
 
-function SectionItem({ sectionType, section }: SectionItemProps) {
+function SectionItem({ courseName, sectionType, section }: SectionItemProps) {
   return (
-    <div className="grid-container">
+    <div className="grid-row">
+      <div className="grid-item">{courseName}</div>
       <div className="grid-item">{sectionType}</div>
       <div className="grid-item">{section.section}</div>
       <div className="grid-item">{section.days}</div>

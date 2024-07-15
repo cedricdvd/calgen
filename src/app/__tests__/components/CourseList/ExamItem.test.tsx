@@ -11,10 +11,11 @@ describe("ExamItem", () => {
     const examType = "FI";
     render(<ExamItem examType={examType} exam={exam} />);
 
-    const textItems = ["FI", "12/15/2021", "W", "8:00-10:00a", "CENTR", "115"];
-
-    for (const textItem of textItems) {
-      expect(screen.getByText(textItem)).toBeInTheDocument();
-    }
+    expect(screen.getByText("FI")).toBeInTheDocument();
+    expect(screen.getByText("12/15/2021")).toBeInTheDocument();
+    expect(screen.getByText("W")).toBeInTheDocument();
+    expect(screen.getByText("8:00-10:00a")).toBeInTheDocument();
+    expect(screen.getByText("CENTR")).toBeInTheDocument();
+    expect(screen.getByText("115")).toBeInTheDocument();
   });
 });
