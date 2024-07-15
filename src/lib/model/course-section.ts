@@ -1,21 +1,21 @@
 import ExamInfo from "./exam-info";
-import SectionInfo from "./section-info";
+import Activity from "./activities/activity-interface";
 
 class CourseSection {
   private _section: string;
-  private _lecture: SectionInfo;
-  private _discussions: Map<string, SectionInfo>;
-  private _labs: Map<string, SectionInfo>;
-  private _studio: Map<string, SectionInfo>;
+  private _lecture: Activity;
+  private _discussions: Map<string, Activity>;
+  private _labs: Map<string, Activity>;
+  private _studio: Map<string, Activity>;
   private _midterms: ExamInfo[];
   private _final: ExamInfo;
 
   constructor(
     section: string,
-    lecture: SectionInfo,
-    discussions: Map<string, SectionInfo>,
-    labs: Map<string, SectionInfo>,
-    studio: Map<string, SectionInfo>,
+    lecture: Activity,
+    discussions: Map<string, Activity>,
+    labs: Map<string, Activity>,
+    studio: Map<string, Activity>,
     midterms: ExamInfo[],
     final: ExamInfo,
   ) {
@@ -32,7 +32,7 @@ class CourseSection {
     return this._section;
   }
 
-  public get lecture(): SectionInfo {
+  public get lecture(): Activity {
     return this._lecture;
   }
 
@@ -40,7 +40,7 @@ class CourseSection {
     return this.lecture === undefined ? 0 : 1;
   }
 
-  public get discussions(): Map<string, SectionInfo> {
+  public get discussions(): Map<string, Activity> {
     return this._discussions;
   }
 
@@ -52,11 +52,11 @@ class CourseSection {
     return this.discussions.size;
   }
 
-  public getDiscussion(section: string): SectionInfo | undefined {
+  public getDiscussion(section: string): Activity | undefined {
     return this.discussions.get(section);
   }
 
-  public get labs(): Map<string, SectionInfo> {
+  public get labs(): Map<string, Activity> {
     return this._labs;
   }
 
@@ -68,11 +68,11 @@ class CourseSection {
     return this.labs.size;
   }
 
-  public getLab(section: string): SectionInfo | undefined {
+  public getLab(section: string): Activity | undefined {
     return this.labs.get(section);
   }
 
-  public get studio(): Map<string, SectionInfo> {
+  public get studio(): Map<string, Activity> {
     return this._studio;
   }
 
@@ -84,7 +84,7 @@ class CourseSection {
     return this.studio.size;
   }
 
-  public getStudio(section: string): SectionInfo | undefined {
+  public getStudio(section: string): Activity | undefined {
     return this.studio.get(section);
   }
 

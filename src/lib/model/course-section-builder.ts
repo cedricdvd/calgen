@@ -1,22 +1,22 @@
 import ExamInfo from "./exam-info";
-import SectionInfo from "./section-info";
+import Activity from "./activities/activity-interface";
 import CourseSection from "./course-section";
 
 class CourseSectionBuilder {
   private section: string;
-  private lecture: SectionInfo;
-  private discussions: Map<string, SectionInfo>;
-  private labs: Map<string, SectionInfo>;
-  private studio: Map<string, SectionInfo>;
+  private lecture: Activity;
+  private discussions: Map<string, Activity>;
+  private labs: Map<string, Activity>;
+  private studio: Map<string, Activity>;
   private midterms: ExamInfo[];
   private final: ExamInfo;
 
   constructor() {
     this.section = "";
-    this.lecture = new SectionInfo("", "", "", "", "");
-    this.discussions = new Map<string, SectionInfo>();
-    this.labs = new Map<string, SectionInfo>();
-    this.studio = new Map<string, SectionInfo>();
+    this.lecture = new Activity("", "", "", "", "");
+    this.discussions = new Map<string, Activity>();
+    this.labs = new Map<string, Activity>();
+    this.studio = new Map<string, Activity>();
     this.midterms = [];
     this.final = new ExamInfo("", "", "", "", "");
   }
@@ -26,24 +26,24 @@ class CourseSectionBuilder {
     return this;
   }
 
-  public withLecture(lecture: SectionInfo): CourseSectionBuilder {
+  public withLecture(lecture: Activity): CourseSectionBuilder {
     this.lecture = lecture;
     return this;
   }
 
   public withDiscussions(
-    discussions: Map<string, SectionInfo>,
+    discussions: Map<string, Activity>,
   ): CourseSectionBuilder {
     this.discussions = discussions;
     return this;
   }
 
-  public withLabs(labs: Map<string, SectionInfo>): CourseSectionBuilder {
+  public withLabs(labs: Map<string, Activity>): CourseSectionBuilder {
     this.labs = labs;
     return this;
   }
 
-  public withStudio(studio: Map<string, SectionInfo>): CourseSectionBuilder {
+  public withStudio(studio: Map<string, Activity>): CourseSectionBuilder {
     this.studio = studio;
     return this;
   }
