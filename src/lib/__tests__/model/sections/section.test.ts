@@ -19,14 +19,7 @@ describe("Test Section", () => {
 
   test("Test Section Add Exam", () => {
     const section = new Section("A00");
-    const exam = new Final(
-      "A00",
-      "Final Exam",
-      "12/12/2021",
-      "12:00PM",
-      "CSB",
-      "130",
-    );
+    const exam = new Final("12/12/2021", "S", "12:00PM", "CSB", "130");
     section.addExam(exam);
     expect(section.exams).toEqual([exam]);
   });
