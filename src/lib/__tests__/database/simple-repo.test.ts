@@ -8,6 +8,30 @@ describe("Test SimpleRepo", () => {
     expect(repo.getAllCourses()).toEqual([]);
   });
 
+  test("Test SimpleRepo Construct Many Courses", () => {
+    const repo = new SimpleRepo([
+      new Course("COGS", "108"),
+      new Course("MATH", "20C"),
+      new Course("CSE", "120"),
+      new Course("CSE", "170"),
+    ]);
+    expect(repo.getAllCourses()).toEqual([
+      new Course("COGS", "108").withId(0),
+      new Course("MATH", "20C").withId(1),
+      new Course("CSE", "120").withId(2),
+      new Course("CSE", "170").withId(3),
+    ]);
+
+    repo.addCourse(new Course("CS", "101"));
+    expect(repo.getAllCourses()).toEqual([
+      new Course("COGS", "108").withId(0),
+      new Course("MATH", "20C").withId(1),
+      new Course("CSE", "120").withId(2),
+      new Course("CSE", "170").withId(3),
+      new Course("CS", "101").withId(4),
+    ]);
+  });
+
   test("Test SimpleRepo Add Course", () => {
     const repo = new SimpleRepo();
     const course = new Course("CS", "101");
