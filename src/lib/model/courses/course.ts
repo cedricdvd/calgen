@@ -2,14 +2,20 @@ import Section from "../sections/section";
 import ICourse from "./course-interface";
 
 class Course implements ICourse {
+  private _id: number;
   private _department: string;
   private _courseNum: string;
   private _sections: Section[];
 
-  constructor(department: string, courseNum: string) {
+  constructor(department: string, courseNum: string, id?: number) {
+    this._id = id || -1;
     this._department = department;
     this._courseNum = courseNum;
     this._sections = [];
+  }
+
+  public get id(): number {
+    return this._id;
   }
 
   public get department(): string {
@@ -30,6 +36,10 @@ class Course implements ICourse {
 
   public addSection(section: Section): void {
     this._sections.push(section);
+  }
+
+  public withId(id: number): ICourse {
+    return new Course(this.department, this.courseNum, id);
   }
 }
 
