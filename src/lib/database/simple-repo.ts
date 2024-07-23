@@ -39,31 +39,147 @@ class SimpleRepo {
   }
 
   public getDepartments(): string[] {
-    return [];
+    return Array.from(
+      new Set(
+        Array.from(this.courses.values()).map((course) => course.department),
+      ),
+    );
   }
 
   public getCoursesByDepartment(department: string): ICourse[] {
-    return [];
+    return Array.from(this.courses.values()).filter((course) => {
+      return course.department === department;
+    });
   }
 
   public getCourseNumbers(department: string): string[] {
-    return [];
+    let filteredCourses: ICourse[] = this.getCoursesByDepartment(department);
+    return filteredCourses.map((course) => {
+      return course.courseNum;
+    });
   }
 
   public updateCoures(id: number, course: ICourse): void {
-    return;
+    course = course.withId(id);
+    this.courses.set(id, course);
   }
 
   public deleteCourse(id: number): void {
-    return;
+    this.courses.delete(id);
   }
 
   public clear(): void {
-    return;
+    this.courses.clear();
+    this.nextId = 0;
   }
 
   public fillExampleCourses(): void {
-    return;
+    for (const courseName in exampleClasses) {
+      const department: string = courseName.split(" ")[0];
+      const courseNum: string = courseName.split(" ")[1];
+      const course: Course = new Course(department, courseNum);
+
+      for (const sectionNumber in exampleClasses[courseName]) {
+        this.addSectionFromInfo(
+          course,
+          sectionNumber,
+          exampleClasses[courseName][sectionNumber],
+        );
+      }
+      this.addCourse(course);
+    }
+  }
+
+  private addSectionFromInfo(
+    course: ICourse,
+    sectionNumber: string,
+    details: SectionDetails,
+  ): void {
+    const section: Section = new Section(sectionNumber);
+
+    if (details.LE) {
+      for (const key in details.LE) {
+        section.addActivity(
+          new Lecture(
+            key,
+            details.LE[key].Days,
+            details.LE[key].Time,
+            details.LE[key].Building || "TBA",
+            details.LE[key].Room || "TBA",
+          ),
+        );
+      }
+    }
+
+    if (details.LA) {
+      for (const key in details.LA) {
+        section.addActivity(
+          new Lab(
+            key,
+            details.LA[key].Days,
+            details.LA[key].Time,
+            details.LA[key].Building || "TBA",
+            details.LA[key].Room || "TBA",
+          ),
+        );
+      }
+    }
+
+    if (details.DI) {
+      for (const key in details.DI) {
+        section.addActivity(
+          new Discussion(
+            key,
+            details.DI[key].Days,
+            details.DI[key].Time,
+            details.DI[key].Building || "TBA",
+            details.DI[key].Room || "TBA",
+          ),
+        );
+      }
+    }
+
+    if (details.ST) {
+      for (const key in details.ST) {
+        section.addActivity(
+          new Studio(
+            key,
+            details.ST[key].Days,
+            details.ST[key].Time,
+            details.ST[key].Building || "TBA",
+            details.ST[key].Room || "TBA",
+          ),
+        );
+      }
+    }
+
+    if (details.MI) {
+      for (const exam of details.MI) {
+        section.addExam(
+          new Midterm(
+            exam.Date,
+            exam.Days,
+            exam.Time,
+            exam.Building || "TBA",
+            exam.Room || "TBA",
+          ),
+        );
+      }
+    }
+
+    if (details.FI) {
+      section.addExam(
+        new Final(
+          details.FI.Date,
+          details.FI.Days,
+          details.FI.Time,
+          details.FI.Building || "TBA",
+          details.FI.Room || "TBA",
+        ),
+      );
+    }
+
+    course.addSection(section);
   }
 }
 

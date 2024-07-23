@@ -7,11 +7,16 @@ class Course implements ICourse {
   private _courseNum: string;
   private _sections: Section[];
 
-  constructor(department: string, courseNum: string, id?: number) {
-    this._id = id || -1;
+  constructor(
+    department: string,
+    courseNum: string,
+    sections?: Section[],
+    id?: number,
+  ) {
     this._department = department;
     this._courseNum = courseNum;
-    this._sections = [];
+    this._sections = sections || [];
+    this._id = id || -1;
   }
 
   public get id(): number {
@@ -39,7 +44,7 @@ class Course implements ICourse {
   }
 
   public withId(id: number): ICourse {
-    return new Course(this.department, this.courseNum, id);
+    return new Course(this.department, this.courseNum, this.sections, id);
   }
 }
 

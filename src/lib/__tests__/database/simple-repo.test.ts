@@ -128,15 +128,25 @@ describe("Test SimpleRepo", () => {
     });
 
     test("Test SimpleRepo Get Courses By Department", () => {
-      expect(repo.getCoursesByDepartment("COGS")).toBe(["COGS 108"]);
-      expect(repo.getCoursesByDepartment("MATH")).toBe(["MATH 20C"]);
-      expect(repo.getCoursesByDepartment("CSE")).toBe(["CSE 120", "CSE 170"]);
+      const cogsCourses = repo
+        .getCoursesByDepartment("COGS")
+        .map((course) => course.courseName);
+      const mathCourses = repo
+        .getCoursesByDepartment("MATH")
+        .map((course) => course.courseName);
+      const cseCourses = repo
+        .getCoursesByDepartment("CSE")
+        .map((course) => course.courseName);
+
+      expect(cogsCourses).toEqual(["COGS 108"]);
+      expect(mathCourses).toEqual(["MATH 20C"]);
+      expect(cseCourses).toEqual(["CSE 120", "CSE 170"]);
     });
 
     test("Test SimpleRepo Get Course Numbers", () => {
-      expect(repo.getCourseNumbers("COGS")).toBe(["108"]);
-      expect(repo.getCourseNumbers("MATH")).toBe(["20C"]);
-      expect(repo.getCourseNumbers("CSE")).toBe(["120", "170"]);
+      expect(repo.getCourseNumbers("COGS")).toEqual(["108"]);
+      expect(repo.getCourseNumbers("MATH")).toEqual(["20C"]);
+      expect(repo.getCourseNumbers("CSE")).toEqual(["120", "170"]);
     });
 
     test("Test SimpleRepo Update Course", () => {
