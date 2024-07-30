@@ -1,6 +1,4 @@
 import Link from "next/link";
-import SimpleRepo from "@/lib/database/simple-repo";
-import Course from "@/lib/model/course";
 import CourseForm from "./components/CourseForm/CourseForm";
 
 export default function Home() {
