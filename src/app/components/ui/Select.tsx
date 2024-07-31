@@ -4,6 +4,7 @@ interface SelectProps {
   setSelected: (value: string) => void;
   handleSelected: (setSelected: (value: string) => void, value: string) => void;
   disabledMessage?: string;
+  ariaLabel?: string;
 }
 
 function Select({
@@ -12,9 +13,11 @@ function Select({
   setSelected,
   handleSelected,
   disabledMessage,
+  ariaLabel,
 }: SelectProps) {
   return (
     <select
+      aria-label={ariaLabel || ""}
       value={selected}
       onChange={(e) => handleSelected(setSelected, e.target.value)}
     >

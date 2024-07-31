@@ -189,5 +189,22 @@ describe("Test SimpleRepo", () => {
       expect(repo.getCourseById(3)).toBeNull();
       expect(repo.getCourseById(4)).not.toBeNull();
     });
+
+    test("Test SimpleRepo Get Course By Title", () => {
+      const course1 = repo.getCourseByTitle("COGS", "108");
+      expect(course1).toEqual(repo.getCourseById(0));
+
+      const course2 = repo.getCourseByTitle("MATH", "20C");
+      expect(course2).toEqual(repo.getCourseById(1));
+
+      const course3 = repo.getCourseByTitle("CSE", "120");
+      expect(course3).toEqual(repo.getCourseById(2));
+
+      const course4 = repo.getCourseByTitle("CSE", "170");
+      expect(course4).toEqual(repo.getCourseById(3));
+
+      const course5 = repo.getCourseByTitle("CSE", "101");
+      expect(course5).toBeNull();
+    });
   });
 });

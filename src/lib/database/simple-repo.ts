@@ -59,6 +59,16 @@ class SimpleRepo {
     });
   }
 
+  public getCourseByTitle(
+    department: string,
+    courseNum: string,
+  ): ICourse | null {
+    let filteredCourses: ICourse[] = this.getCoursesByDepartment(department);
+    return (
+      filteredCourses.find((course) => course.courseNum === courseNum) || null
+    );
+  }
+
   public updateCoures(id: number, course: ICourse): void {
     course = course.withId(id);
     this.courses.set(id, course);

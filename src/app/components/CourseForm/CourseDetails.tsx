@@ -1,11 +1,78 @@
-import Course from "@/lib/model/courses/course";
+import SimpleRepo from "@/lib/database/simple-repo";
+import Select from "../ui/Select";
 
 interface CourseDetailsProps {
-  course: Course;
+  courseRepository: SimpleRepo;
+  department: string;
+  courseNum: string;
+  sectionNum: string;
+  setDepartment: (value: string) => void;
+  setCourseNum: (value: string) => void;
+  setSectionNum: (value: string) => void;
+  handleSelect: (setSelected: (value: string) => void, value: string) => void;
 }
 
-function CourseDetails({ course }: CourseDetailsProps) {
-  return <></>;
+function CourseDetails({
+  courseRepository,
+  department,
+  courseNum,
+  sectionNum,
+  setDepartment,
+  setCourseNum,
+  setSectionNum,
+  handleSelect,
+}: CourseDetailsProps) {
+  return (
+    <div>
+      <h2>Course</h2>
+      {courseRepository.getDepartments().length == 0 && (
+        <p>No courses available</p>
+      )}
+      {courseRepository.getDepartments().length > 0 && (
+        <>
+          <p>Department</p>
+          <Select
+            options={courseRepository.getDepartments()}
+            selected={department}
+            setSelected={setDepartment}
+            handleSelected={handleSelect}
+            disabledMessage={"Select a department"}
+            ariaLabel={"Department"}
+          />
+        </>
+      )}
+      {courseRepository.getCoursesByDepartment(department).length > 0 && (
+        <>
+          <p>Course Number</p>
+          <Select
+            options={courseRepository.getCourseNumbers(department)}
+            selected={courseNum}
+            setSelected={setCourseNum}
+            handleSelected={handleSelect}
+            disabledMessage={"Select a course number"}
+            ariaLabel={"CourseNum"}
+          />
+        </>
+      )}
+      {courseRepository.getCourseByTitle(department, courseNum) !== null && (
+        <>
+          <p>Section Number</p>
+          <Select
+            options={
+              courseRepository
+                .getCourseByTitle(department, courseNum)
+                ?.sections.map((section) => section.sectionNum) || []
+            }
+            selected={sectionNum}
+            setSelected={setSectionNum}
+            handleSelected={handleSelect}
+            disabledMessage={"Select a section number"}
+            ariaLabel={"SectionNum"}
+          />
+        </>
+      )}
+    </div>
+  );
 }
 
 export default CourseDetails;
