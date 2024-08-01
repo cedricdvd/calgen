@@ -17,7 +17,7 @@ class Section implements ISection {
     return this._sectionNum;
   }
 
-  public get activites(): Activity[] {
+  public get activities(): Activity[] {
     return this._activites;
   }
 

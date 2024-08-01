@@ -72,10 +72,10 @@ describe("Test SimpleRepo", () => {
       expect(course1.courseName).toBe("COGS 108");
       expect(course1.sections.length).toBe(2);
 
-      expect(course1.sections[0].activites.length).toBe(8);
+      expect(course1.sections[0].activities.length).toBe(8);
       expect(course1.sections[0].exams.length).toBe(1);
 
-      expect(course1.sections[1].activites.length).toBe(8);
+      expect(course1.sections[1].activities.length).toBe(8);
       expect(course1.sections[1].exams.length).toBe(1);
     } else {
       fail("COGS 108 not found");
@@ -86,13 +86,13 @@ describe("Test SimpleRepo", () => {
       expect(course2.courseName).toBe("MATH 20C");
       expect(course2.sections.length).toBe(3);
 
-      expect(course2.sections[0].activites.length).toBe(5);
+      expect(course2.sections[0].activities.length).toBe(5);
       expect(course2.sections[0].exams.length).toBe(3);
 
-      expect(course2.sections[1].activites.length).toBe(5);
+      expect(course2.sections[1].activities.length).toBe(5);
       expect(course2.sections[1].exams.length).toBe(3);
 
-      expect(course2.sections[2].activites.length).toBe(5);
+      expect(course2.sections[2].activities.length).toBe(5);
       expect(course2.sections[2].exams.length).toBe(3);
     } else {
       fail("MATH 20C not found");
@@ -103,7 +103,7 @@ describe("Test SimpleRepo", () => {
       expect(course3.courseName).toBe("CSE 120");
       expect(course3.sections.length).toBe(1);
 
-      expect(course3.sections[0].activites.length).toBe(2);
+      expect(course3.sections[0].activities.length).toBe(2);
       expect(course3.sections[0].exams.length).toBe(1);
     } else {
       fail("CSE 120 not found");
@@ -114,7 +114,7 @@ describe("Test SimpleRepo", () => {
       expect(course4.courseName).toBe("CSE 170");
       expect(course4.sections.length).toBe(1);
 
-      expect(course4.sections[0].activites.length).toBe(8);
+      expect(course4.sections[0].activities.length).toBe(8);
       expect(course4.sections[0].exams.length).toBe(1);
     } else {
       fail("CSE 170 not found");

@@ -6,7 +6,7 @@ describe("Test Section", () => {
   test("Test Section Getters", () => {
     const section = new Section("001");
     expect(section.sectionNum).toBe("001");
-    expect(section.activites).toEqual([]);
+    expect(section.activities).toEqual([]);
     expect(section.exams).toEqual([]);
   });
 
@@ -14,7 +14,7 @@ describe("Test Section", () => {
     const section = new Section("A00");
     const activity = new Lecture("A00", "MWF", "9:00AM-10:00AM", "CSB", "130");
     section.addActivity(activity);
-    expect(section.activites).toEqual([activity]);
+    expect(section.activities).toEqual([activity]);
   });
 
   test("Test Section Add Exam", () => {

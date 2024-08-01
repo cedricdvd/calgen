@@ -63,6 +63,7 @@ function ActivityDetails({
             setSelected={setLecture}
             handleSelected={handleSelect}
             disabledMessage={"Select a lecture"}
+            ariaLabel={"SelectLecture"}
           />
           {lecture !== "" && (
             <>
@@ -83,6 +84,7 @@ function ActivityDetails({
             setSelected={setLab}
             handleSelected={handleSelect}
             disabledMessage={"Select a lab"}
+            ariaLabel={"SelectLab"}
           />
           {lab !== "" && (
             <>
@@ -101,6 +103,7 @@ function ActivityDetails({
             setSelected={setDiscussion}
             handleSelected={handleSelect}
             disabledMessage={"Select a discussion"}
+            ariaLabel={"SelectDiscussion"}
           />
           {discussion !== "" && (
             <>
@@ -129,6 +132,7 @@ function ActivityDetails({
             setSelected={setStudio}
             handleSelected={handleSelect}
             disabledMessage={"Select a studio"}
+            ariaLabel={"SelectStudio"}
           />
           {studio !== "" && (
             <>
