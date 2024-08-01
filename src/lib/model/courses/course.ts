@@ -1,16 +1,17 @@
 import Section from "../sections/section";
 import ICourse from "./course-interface";
+import ISection from "../sections/section-interface";
 
 class Course implements ICourse {
   private _id: number;
   private _department: string;
   private _courseNum: string;
-  private _sections: Section[];
+  private _sections: ISection[];
 
   constructor(
     department: string,
     courseNum: string,
-    sections?: Section[],
+    sections?: ISection[],
     id?: number,
   ) {
     this._department = department;
@@ -35,7 +36,7 @@ class Course implements ICourse {
     return `${this.department} ${this.courseNum}`;
   }
 
-  public get sections(): Section[] {
+  public get sections(): ISection[] {
     return this._sections;
   }
 

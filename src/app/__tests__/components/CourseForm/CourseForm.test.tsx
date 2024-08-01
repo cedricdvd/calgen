@@ -119,7 +119,7 @@ describe("Test CourseForm", () => {
       expect(screen.getByText("4:00p-4:50p")).toBeInTheDocument();
 
       const submitCourse = screen.getByRole("button", { name: "Submit" });
-      user.click(submitCourse);
+      await user.click(submitCourse);
 
       expect(courseList).toHaveLength(1);
       const course = courseList[0];

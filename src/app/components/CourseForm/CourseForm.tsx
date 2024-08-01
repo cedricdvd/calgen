@@ -5,6 +5,15 @@ import ISection from "@/lib/model/sections/section-interface";
 import CourseDetails from "./CourseDetails";
 import ActivityDetails from "./ActivityDetails";
 import ExamDetails from "./ExamDetails";
+import Button from "../ui/Button";
+import Course from "@/lib/model/courses/course";
+import Section from "@/lib/model/sections/section";
+import Lecture from "@/lib/model/activities/activity-types/lecture";
+import Discussion from "@/lib/model/activities/activity-types/discussion";
+import Studio from "@/lib/model/activities/activity-types/studio";
+import Lab from "@/lib/model/activities/activity-types/lab";
+import Midterm from "@/lib/model/exams/exam-types/midterm";
+import Final from "@/lib/model/exams/exam-types/final";
 
 interface CourseFormProps {
   courseRepository: SimpleRepo;
@@ -45,7 +54,97 @@ function CourseForm({
   }
 
   function onSubmit() {
-    return;
+    let selectedCourse: ICourse | null = courseRepository.getCourseByTitle(
+      department,
+      courseNum,
+    );
+    if (selectedCourse === null) {
+      return;
+    }
+
+    let selectedSection: ISection | null =
+      selectedCourse.sections.find(
+        (section: ISection) => section.sectionNum === sectionNum,
+      ) || null;
+    if (selectedSection === null) {
+      return;
+    }
+
+    let newCourse: ICourse = new Course(department, courseNum);
+    let newSection: ISection = new Section(sectionNum);
+
+    selectedSection.activities.forEach((activity) => {
+      if (activity.type === "LE" && activity.sectionNum === lecture) {
+        newSection.addActivity(
+          new Lecture(
+            activity.sectionNum,
+            activity.daysOfWeek,
+            activity.timeOfDay,
+            activity.building,
+            activity.room,
+          ),
+        );
+      } else if (activity.type === "DI" && activity.sectionNum === discussion) {
+        newSection.addActivity(
+          new Discussion(
+            activity.sectionNum,
+            activity.daysOfWeek,
+            activity.timeOfDay,
+            activity.building,
+            activity.room,
+          ),
+        );
+      } else if (activity.type === "ST" && activity.sectionNum === studio) {
+        newSection.addActivity(
+          new Studio(
+            activity.sectionNum,
+            activity.daysOfWeek,
+            activity.timeOfDay,
+            activity.building,
+            activity.room,
+          ),
+        );
+      } else if (activity.type === "LA" && activity.sectionNum === lab) {
+        newSection.addActivity(
+          new Lab(
+            activity.sectionNum,
+            activity.daysOfWeek,
+            activity.timeOfDay,
+            activity.building,
+            activity.room,
+          ),
+        );
+      }
+    });
+
+    selectedSection.exams.forEach((exam) => {
+      if (exam.type === "MI") {
+        newSection.addExam(
+          new Midterm(
+            exam.date,
+            exam.dayOfWeek,
+            exam.timeOfDay,
+            exam.building,
+            exam.room,
+          ),
+        );
+      }
+
+      if (exam.type === "FI") {
+        newSection.addExam(
+          new Final(
+            exam.date,
+            exam.dayOfWeek,
+            exam.timeOfDay,
+            exam.building,
+            exam.room,
+          ),
+        );
+      }
+    });
+
+    newCourse.addSection(newSection);
+    setCourseList([...courseList, newCourse]);
   }
 
   function resetActivites() {
@@ -97,6 +196,9 @@ function CourseForm({
           />
         </>
       )}
+      <Button onClick={onSubmit} className={"Submit"} ariaLabel={"Submit"}>
+        Submit
+      </Button>
     </div>
   );
 }
