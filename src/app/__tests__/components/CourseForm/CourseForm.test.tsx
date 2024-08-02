@@ -12,6 +12,16 @@ describe("Test CourseForm", () => {
   let courseList: ICourse[];
   let setCourseList: (value: ICourse[]) => void;
 
+  function rerenderCourseForm(rerender: (ui: React.ReactNode) => void) {
+    rerender(
+      <CourseForm
+        courseRepository={courseRepository}
+        courseList={courseList}
+        setCourseList={setCourseList}
+      />,
+    );
+  }
+
   beforeEach(() => {
     courseRepository = new SimpleRepo();
     courseList = [];
@@ -54,37 +64,19 @@ describe("Test CourseForm", () => {
       });
 
       await user.selectOptions(departmentSelect, "MATH");
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       const courseNumSelect = screen.getByRole("combobox", {
         name: "CourseNum",
       });
       await user.selectOptions(courseNumSelect, "20C");
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       const sectionNumSelect = screen.getByRole("combobox", {
         name: "SectionNum",
       });
       await user.selectOptions(sectionNumSelect, "A00");
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       expect(screen.getAllByText("MI")).toHaveLength(2);
       expect(screen.getAllByText("FI")).toHaveLength(1);
@@ -104,13 +96,7 @@ describe("Test CourseForm", () => {
       });
       await user.selectOptions(discussionSelect, "A01");
 
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       expect(screen.getByText("TuTh")).toBeInTheDocument();
       expect(screen.getByText("9:30a-10:50a")).toBeInTheDocument();
@@ -165,37 +151,19 @@ describe("Test CourseForm", () => {
       });
 
       await user.selectOptions(departmentSelect, "MATH");
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       const courseNumSelect = screen.getByRole("combobox", {
         name: "CourseNum",
       });
       await user.selectOptions(courseNumSelect, "20C");
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       const sectionNumSelect = screen.getByRole("combobox", {
         name: "SectionNum",
       });
       await user.selectOptions(sectionNumSelect, "A00");
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       const lectureSelect = screen.getByRole("combobox", {
         name: "SelectLecture",
@@ -207,22 +175,10 @@ describe("Test CourseForm", () => {
       });
       await user.selectOptions(discussionSelect, "A01");
 
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       await user.selectOptions(departmentSelect, "CSE");
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       expect(screen.getByText("Course")).toBeInTheDocument();
       expect(screen.getByText("120")).toBeInTheDocument();
@@ -267,37 +223,19 @@ describe("Test CourseForm", () => {
       });
 
       await user.selectOptions(departmentSelect, "CSE");
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       const courseNumSelect = screen.getByRole("combobox", {
         name: "CourseNum",
       });
       await user.selectOptions(courseNumSelect, "120");
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       const sectionNumSelect = screen.getByRole("combobox", {
         name: "SectionNum",
       });
       await user.selectOptions(sectionNumSelect, "A00");
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       const lectureSelect = screen.getByRole("combobox", {
         name: "SelectLecture",
@@ -309,22 +247,10 @@ describe("Test CourseForm", () => {
       });
       await user.selectOptions(discussionSelect, "A01");
 
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       await user.selectOptions(courseNumSelect, "170");
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       expect(screen.getByText("Course")).toBeInTheDocument();
       expect(screen.getByText("120")).toBeInTheDocument();
@@ -372,37 +298,19 @@ describe("Test CourseForm", () => {
       });
 
       await user.selectOptions(departmentSelect, "MATH");
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       const courseNumSelect = screen.getByRole("combobox", {
         name: "CourseNum",
       });
       await user.selectOptions(courseNumSelect, "20C");
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       const sectionNumSelect = screen.getByRole("combobox", {
         name: "SectionNum",
       });
       await user.selectOptions(sectionNumSelect, "A00");
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       const lectureSelect = screen.getByRole("combobox", {
         name: "SelectLecture",
@@ -414,22 +322,10 @@ describe("Test CourseForm", () => {
       });
       await user.selectOptions(discussionSelect, "A01");
 
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       await user.selectOptions(sectionNumSelect, "B00");
-      rerender(
-        <CourseForm
-          courseRepository={courseRepository}
-          courseList={courseList}
-          setCourseList={setCourseList}
-        />,
-      );
+      rerenderCourseForm(rerender);
 
       expect(
         screen.queryByRole("combobox", { name: "SelectLecture" }),
@@ -459,6 +355,135 @@ describe("Test CourseForm", () => {
       expect(sectionNumSelect2.value).toBe("B00");
       expect(lectureSelect2.value).toBe("");
       expect(discussionSelect2.value).toBe("");
+    });
+
+    test("Test Submit Course with Lab and Studio", async () => {
+      const { rerender } = render(
+        <CourseForm
+          courseRepository={courseRepository}
+          courseList={courseList}
+          setCourseList={setCourseList}
+        />,
+      );
+
+      let departmentSelect = screen.getByRole("combobox", {
+        name: "Department",
+      });
+      await user.selectOptions(departmentSelect, "COGS");
+      rerenderCourseForm(rerender);
+
+      let courseNumSelect = screen.getByRole("combobox", {
+        name: "CourseNum",
+      });
+      await user.selectOptions(courseNumSelect, "108");
+      rerenderCourseForm(rerender);
+
+      let sectionNumSelect = screen.getByRole("combobox", {
+        name: "SectionNum",
+      });
+      await user.selectOptions(sectionNumSelect, "B00");
+      rerenderCourseForm(rerender);
+
+      let lectureSelect = screen.getByRole("combobox", {
+        name: "SelectLecture",
+      });
+      await user.selectOptions(lectureSelect, "B00");
+
+      let labSelect = screen.getByRole("combobox", {
+        name: "SelectLab",
+      });
+      await user.selectOptions(labSelect, "B07");
+      rerenderCourseForm(rerender);
+
+      let submitCourse = screen.getByRole("button", { name: "Submit" });
+      await user.click(submitCourse);
+      rerenderCourseForm(rerender);
+
+      departmentSelect = screen.getByRole("combobox", {
+        name: "Department",
+      });
+      await user.selectOptions(departmentSelect, "CSE");
+      rerenderCourseForm(rerender);
+
+      courseNumSelect = screen.getByRole("combobox", {
+        name: "CourseNum",
+      });
+      await user.selectOptions(courseNumSelect, "170");
+      rerenderCourseForm(rerender);
+
+      sectionNumSelect = screen.getByRole("combobox", {
+        name: "SectionNum",
+      });
+      await user.selectOptions(sectionNumSelect, "A00");
+      rerenderCourseForm(rerender);
+
+      lectureSelect = screen.getByRole("combobox", {
+        name: "SelectLecture",
+      });
+      await user.selectOptions(lectureSelect, "A00");
+
+      let studioSelect = screen.getByRole("combobox", {
+        name: "SelectStudio",
+      });
+      await user.selectOptions(studioSelect, "A06");
+      rerenderCourseForm(rerender);
+
+      submitCourse = screen.getByRole("button", { name: "Submit" });
+      await user.click(submitCourse);
+
+      expect(courseList).toHaveLength(2);
+      expect(courseList[0].courseName).toBe("COGS 108");
+      expect(courseList[0].sections).toHaveLength(1);
+      expect(courseList[0].sections[0].sectionNum).toBe("B00");
+      expect(courseList[0].sections[0].activities).toHaveLength(2);
+      expect(courseList[0].sections[0].activities[0].sectionNum).toBe("B00");
+      expect(courseList[0].sections[0].activities[0].type).toBe("LE");
+      expect(courseList[0].sections[0].activities[0].daysOfWeek).toBe("MWF");
+      expect(courseList[0].sections[0].activities[0].timeOfDay).toBe(
+        "2:00p-2:50p",
+      );
+      expect(courseList[0].sections[0].activities[0].location).toBe(
+        "YORK 2722",
+      );
+      expect(courseList[0].sections[0].activities[1].sectionNum).toBe("B07");
+      expect(courseList[0].sections[0].activities[1].type).toBe("LA");
+      expect(courseList[0].sections[0].activities[1].daysOfWeek).toBe("W");
+      expect(courseList[0].sections[0].activities[1].timeOfDay).toBe(
+        "6:00p-6:50p",
+      );
+      expect(courseList[0].sections[0].activities[1].location).toBe("WLH 2207");
+      expect(courseList[0].sections[0].exams).toHaveLength(1);
+      expect(courseList[0].sections[0].exams[0].type).toBe("FI");
+      expect(courseList[0].sections[0].exams[0].dayOfWeek).toBe("W");
+      expect(courseList[0].sections[0].exams[0].timeOfDay).toBe("3:00p-5:59p");
+      expect(courseList[0].sections[0].exams[0].date).toBe("12/11/2024");
+
+      expect(courseList[1].sections).toHaveLength(1);
+      expect(courseList[1].sections[0].sectionNum).toBe("A00");
+      expect(courseList[1].sections[0].activities).toHaveLength(2);
+      expect(courseList[1].sections[0].activities[0].sectionNum).toBe("A00");
+      expect(courseList[1].sections[0].activities[0].type).toBe("LE");
+      expect(courseList[1].sections[0].activities[0].daysOfWeek).toBe("MWF");
+      expect(courseList[1].sections[0].activities[0].timeOfDay).toBe(
+        "1:00p-1:50p",
+      );
+      expect(courseList[1].sections[0].activities[0].location).toBe(
+        "CENTR 105",
+      );
+      expect(courseList[1].sections[0].activities[1].sectionNum).toBe("A06");
+      expect(courseList[1].sections[0].activities[1].type).toBe("ST");
+      expect(courseList[1].sections[0].activities[1].daysOfWeek).toBe("F");
+      expect(courseList[1].sections[0].activities[1].timeOfDay).toBe(
+        "4:00p-5:50p",
+      );
+      expect(courseList[1].sections[0].activities[1].location).toBe(
+        "EBU3B 4258",
+      );
+      expect(courseList[1].sections[0].exams).toHaveLength(1);
+      expect(courseList[1].sections[0].exams[0].type).toBe("FI");
+      expect(courseList[1].sections[0].exams[0].dayOfWeek).toBe("M");
+      expect(courseList[1].sections[0].exams[0].timeOfDay).toBe("11:30a-2:29p");
+      expect(courseList[1].sections[0].exams[0].date).toBe("12/09/2024");
     });
   });
 });
