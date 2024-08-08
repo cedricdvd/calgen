@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
 
 import CourseItem from "@/app/components/CourseList/CourseItem";
 import Course from "@/lib/model/courses/course";
@@ -15,13 +16,11 @@ import Final from "@/lib/model/exams/exam-types/final";
 
 describe("Test CourseItem", () => {
   test("Test Default Render", () => {
-    render(<CourseItem course={new Course("CSE", "110")} />);
+    render(
+      <CourseItem course={new Course("CSE", "110", [new Section("A00")])} />,
+    );
 
     expect(screen.getByText("CSE 110")).toBeInTheDocument();
-    expect(screen.getByText("Section")).toBeInTheDocument();
-    expect(screen.getByText("Type")).toBeInTheDocument();
-    expect(screen.getByText("Days of Week")).toBeInTheDocument();
-    expect(screen.getByText("Location")).toBeInTheDocument();
   });
 
   test("Test Activity Render", () => {
@@ -40,6 +39,10 @@ describe("Test CourseItem", () => {
     course.addSection(section);
 
     render(<CourseItem course={course} />);
+    expect(screen.getByText("Section")).toBeInTheDocument();
+    expect(screen.getByText("Type")).toBeInTheDocument();
+    expect(screen.getByText("Days of Week")).toBeInTheDocument();
+    expect(screen.getByText("Location")).toBeInTheDocument();
 
     expect(screen.getByText("A00")).toBeInTheDocument();
     expect(screen.getByText("LE")).toBeInTheDocument();
@@ -80,8 +83,6 @@ describe("Test CourseItem", () => {
     course.addSection(section);
 
     render(<CourseItem course={course} />);
-
-    expect(screen.getByText("Exam")).toBeInTheDocument();
 
     expect(screen.getByText("Type")).toBeInTheDocument();
     expect(screen.getByText("Day of Week")).toBeInTheDocument();

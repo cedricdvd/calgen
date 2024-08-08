@@ -5,7 +5,15 @@ interface ActivityItemProps {
 }
 
 function ActivityItem({ activity }: ActivityItemProps) {
-  return <></>;
+  return (
+    <div className="activity-item">
+      <div>{activity.sectionNum}</div>
+      <div>{activity.type}</div>
+      <div>{activity.daysOfWeek}</div>
+      <div>{activity.timeOfDay}</div>
+      <div>{activity.location}</div>
+    </div>
+  );
 }
 
 export default ActivityItem;

@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
 
 import ActivityItem from "@/app/components/CourseList/ActivityItem";
 import Lecture from "@/lib/model/activities/activity-types/lecture";
@@ -17,6 +18,6 @@ describe("Test ActivityItem", () => {
     expect(screen.getByText("12/09/2021")).toBeInTheDocument();
     expect(screen.getByText("W")).toBeInTheDocument();
     expect(screen.getByText("12:00AM-3:00AM")).toBeInTheDocument();
-    expect(screen.getByText("WLH")).toBeInTheDocument();
+    expect(screen.getByText("WLH 2001")).toBeInTheDocument();
   });
 });

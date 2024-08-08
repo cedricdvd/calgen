@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
 
 import ExamItem from "@/app/components/CourseList/ExamItem";
 import Midterm from "@/lib/model/exams/exam-types/midterm";
@@ -15,6 +16,6 @@ describe("Test ExamItem", () => {
     expect(screen.getByText("12/09/2021")).toBeInTheDocument();
     expect(screen.getByText("W")).toBeInTheDocument();
     expect(screen.getByText("12:00AM-3:00AM")).toBeInTheDocument();
-    expect(screen.getByText("WLH")).toBeInTheDocument();
+    expect(screen.getByText("WLH 2001")).toBeInTheDocument();
   });
 });
