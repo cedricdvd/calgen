@@ -8,30 +8,58 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.activity-list, .exam-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.activity-header, .activity-item, .exam-header, .exam-item {
+  display: contents;
 }
 
-input {
-  color:black;
+.activity-select {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.exam-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
+
+.exam-details-item {
+  display: contents;
+}
+
+.course-select {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+/* @media (prefers-color-scheme: dark) { */
+/*   :root { */
+/*     --foreground-rgb: 255, 255, 255; */
+/*     --background-start-rgb: 0, 0, 0; */
+/*     --background-end-rgb: 0, 0, 0; */
+/*   } */
+/* } */
+/*   */
+/* body { */
+/*   color: rgb(var(--foreground-rgb)); */
+/*   background: linear-gradient( */
+/*       to bottom, */
+/*       transparent, */
+/*       rgb(var(--background-end-rgb)) */
+/*     ) */
+/*     rgb(var(--background-start-rgb)); */
+/* } */
+/*   */
+/* input { */
+/*   color:black; */
+/* } */
+/*   */
+/* @layer utilities { */
+/*   .text-balance { */
+/*     text-wrap: balance; */
+/*   } */
+/* } */

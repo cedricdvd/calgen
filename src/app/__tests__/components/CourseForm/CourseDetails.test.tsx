@@ -1,118 +1,192 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
 import CourseDetails from "@/app/components/CourseForm/CourseDetails";
 import SimpleRepo from "@/lib/database/simple-repo";
 
-describe("CourseDetails", () => {
-  let repo: SimpleRepo;
-  let setDepartment: jest.Mock;
-  let setCourseNumber: jest.Mock;
-  let handleSelect: jest.Mock;
-  let user: UserEvent;
+describe("Test CourseDetails", () => {
+  let courseRepository: SimpleRepo;
+  let department: string;
+  let courseNum: string;
+  let sectionNum: string;
+
+  function setDepartment(value: string) {
+    department = value;
+  }
+
+  function setCourseNum(value: string) {
+    courseNum = value;
+  }
+
+  function setSectionNum(value: string) {
+    sectionNum = value;
+  }
+
+  function handleSelect(setSelected: (value: string) => void, value: string) {
+    setSelected(value);
+  }
 
   beforeEach(() => {
-    repo = new SimpleRepo();
-    repo.fillExampleClasses();
-    setDepartment = jest.fn((x) => x);
-    setCourseNumber = jest.fn((x) => x);
-    handleSelect = jest.fn((setValue, value) => setValue(value));
-    user = userEvent.setup();
+    courseRepository = new SimpleRepo();
+    department = "";
+    courseNum = "";
+    sectionNum = "";
   });
 
-  it("renders a select", () => {
+  test("Tests default render", () => {
     render(
       <CourseDetails
-        repo={repo}
-        department=""
+        courseRepository={courseRepository}
+        department={department}
+        courseNum={courseNum}
+        sectionNum={sectionNum}
         setDepartment={setDepartment}
-        courseNumber=""
-        setCourseNumber={setCourseNumber}
-        handleSelect={handleSelect}
-      />,
-    );
-    const select = screen.getByRole("combobox");
-    expect(select).toBeInTheDocument();
-    expect(select).toHaveLength(4);
-    expect(select).toHaveTextContent("Select a department");
-  });
-
-  it("renders correct options", () => {
-    render(
-      <CourseDetails
-        repo={repo}
-        department=""
-        setDepartment={setDepartment}
-        courseNumber=""
-        setCourseNumber={setCourseNumber}
-        handleSelect={handleSelect}
-      />,
-    );
-    const options = screen.getAllByRole("option");
-    expect(options).toHaveLength(4);
-    expect(options[0]).toHaveTextContent("Select a department");
-    expect(options[1]).toHaveTextContent("COGS");
-    expect(options[2]).toHaveTextContent("MATH");
-    expect(options[3]).toHaveTextContent("CSE");
-  });
-
-  it("calls setDepartment", async () => {
-    render(
-      <CourseDetails
-        repo={repo}
-        department=""
-        setDepartment={setDepartment}
-        courseNumber=""
-        setCourseNumber={setCourseNumber}
+        setCourseNum={setCourseNum}
+        setSectionNum={setSectionNum}
         handleSelect={handleSelect}
       />,
     );
 
-    await user.selectOptions(screen.getByRole("combobox"), "CSE");
-
-    expect(handleSelect).toHaveBeenCalledWith(setDepartment, "CSE");
-    expect(setDepartment).toHaveBeenCalledWith("CSE");
-    expect(setDepartment).toHaveReturnedWith("CSE");
+    expect(screen.getByText("Course")).toBeInTheDocument();
+    expect(screen.getByText("No courses available")).toBeInTheDocument();
   });
 
-  it("renders a second select", async () => {
-    render(
-      <CourseDetails
-        repo={repo}
-        department="CSE"
-        setDepartment={setDepartment}
-        courseNumber=""
-        setCourseNumber={setCourseNumber}
-        handleSelect={handleSelect}
-      />,
-    );
+  describe("Test user interaction when courses available", () => {
+    const user: UserEvent = userEvent.setup();
 
-    const selects = screen.getAllByRole("combobox");
-    expect(selects).toHaveLength(2);
+    beforeEach(() => {
+      courseRepository.fillExampleCourses();
+    });
 
-    const departmentSelect = selects[0];
-    await user.selectOptions(departmentSelect, "CSE");
+    test("Test multiple department options", () => {
+      const { rerender } = render(
+        <CourseDetails
+          courseRepository={courseRepository}
+          department={department}
+          courseNum={courseNum}
+          sectionNum={sectionNum}
+          setDepartment={setDepartment}
+          setCourseNum={setCourseNum}
+          setSectionNum={setSectionNum}
+          handleSelect={handleSelect}
+        />,
+      );
 
-    const courseSelect = selects[1];
-    expect(courseSelect).toBeInTheDocument();
-    expect(courseSelect).toHaveLength(3);
-    expect(courseSelect).toHaveTextContent("Select a course number");
+      const departmentSelect = screen.getByRole("combobox", {
+        name: "Department",
+      });
 
-    const options = screen.getAllByRole("option");
-    expect(options).toHaveLength(7);
-    expect(options[0]).toHaveTextContent("Select a department");
-    expect(options[1]).toHaveTextContent("COGS");
-    expect(options[2]).toHaveTextContent("MATH");
-    expect(options[3]).toHaveTextContent("CSE");
-    expect(options[4]).toHaveTextContent("Select a course number");
-    expect(options[5]).toHaveTextContent("120");
-    expect(options[6]).toHaveTextContent("170");
+      expect(
+        screen.getByRole("option", { name: "Select a department" }),
+      ).toBeInTheDocument();
+      expect(screen.getByRole("option", { name: "COGS" })).toBeInTheDocument();
+      expect(screen.getByRole("option", { name: "CSE" })).toBeInTheDocument();
+      expect(screen.getByRole("option", { name: "MATH" })).toBeInTheDocument();
+    });
 
-    await user.selectOptions(courseSelect, "120");
+    test("Test multiple course number options", async () => {
+      const { rerender } = render(
+        <CourseDetails
+          courseRepository={courseRepository}
+          department={department}
+          courseNum={courseNum}
+          sectionNum={sectionNum}
+          setDepartment={setDepartment}
+          setCourseNum={setCourseNum}
+          setSectionNum={setSectionNum}
+          handleSelect={handleSelect}
+        />,
+      );
 
-    expect(handleSelect).toHaveBeenCalledWith(setCourseNumber, "120");
-    expect(setCourseNumber).toHaveBeenCalledWith("120");
-    expect(setCourseNumber).toHaveReturnedWith("120");
+      const departmentSelect = screen.getByRole("combobox", {
+        name: "Department",
+      });
+
+      await user.selectOptions(departmentSelect, "CSE");
+
+      rerender(
+        <CourseDetails
+          courseRepository={courseRepository}
+          department={department}
+          courseNum={courseNum}
+          sectionNum={sectionNum}
+          setDepartment={setDepartment}
+          setCourseNum={setCourseNum}
+          setSectionNum={setSectionNum}
+          handleSelect={handleSelect}
+        />,
+      );
+
+      expect(
+        screen.getByRole("combobox", { name: "CourseNum" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("option", { name: "Select a course number" }),
+      ).toBeInTheDocument();
+      expect(screen.getByRole("option", { name: "120" })).toBeInTheDocument();
+      expect(screen.getByRole("option", { name: "170" })).toBeInTheDocument();
+    });
+
+    test("Test multiple section number options", async () => {
+      const { rerender } = render(
+        <CourseDetails
+          courseRepository={courseRepository}
+          department={department}
+          courseNum={courseNum}
+          sectionNum={sectionNum}
+          setDepartment={setDepartment}
+          setCourseNum={setCourseNum}
+          setSectionNum={setSectionNum}
+          handleSelect={handleSelect}
+        />,
+      );
+
+      const departmentSelect = screen.getByRole("combobox", {
+        name: "Department",
+      });
+
+      await user.selectOptions(departmentSelect, "MATH");
+      rerender(
+        <CourseDetails
+          courseRepository={courseRepository}
+          department={department}
+          courseNum={courseNum}
+          sectionNum={sectionNum}
+          setDepartment={setDepartment}
+          setCourseNum={setCourseNum}
+          setSectionNum={setSectionNum}
+          handleSelect={handleSelect}
+        />,
+      );
+
+      const courseNumSelect = screen.getByRole("combobox", {
+        name: "CourseNum",
+      });
+      await user.selectOptions(courseNumSelect, "20C");
+      rerender(
+        <CourseDetails
+          courseRepository={courseRepository}
+          department={department}
+          courseNum={courseNum}
+          sectionNum={sectionNum}
+          setDepartment={setDepartment}
+          setCourseNum={setCourseNum}
+          setSectionNum={setSectionNum}
+          handleSelect={handleSelect}
+        />,
+      );
+
+      expect(
+        screen.getByRole("combobox", { name: "SectionNum" }),
+      ).toBeInTheDocument();
+
+      expect(
+        screen.getByRole("option", { name: "Select a section number" }),
+      ).toBeInTheDocument();
+      expect(screen.getByRole("option", { name: "A00" })).toBeInTheDocument();
+      expect(screen.getByRole("option", { name: "B00" })).toBeInTheDocument();
+      expect(screen.getByRole("option", { name: "C00" })).toBeInTheDocument();
+    });
   });
 });

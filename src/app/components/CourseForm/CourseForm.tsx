@@ -1,176 +1,205 @@
-"use client";
-
-import React, { useState } from "react";
+import { useState } from "react";
 import SimpleRepo from "@/lib/database/simple-repo";
-import Course from "@/lib/model/course";
-import CourseSection from "@/lib/model/course-section";
-import LectureDetails from "./LectureDetails";
+import ICourse from "@/lib/model/courses/course-interface";
+import ISection from "@/lib/model/sections/section-interface";
 import CourseDetails from "./CourseDetails";
-import SectionDetails from "./SectionDetails";
-import CourseSectionBuilder from "@/lib/model/course-section-builder";
-import SectionInfo from "@/lib/model/section-info";
-import ExamInfo from "@/lib/model/exam-info";
+import ActivityDetails from "./ActivityDetails";
+import ExamDetails from "./ExamDetails";
+import Button from "../ui/Button";
+import Course from "@/lib/model/courses/course";
+import Section from "@/lib/model/sections/section";
+import Lecture from "@/lib/model/activities/activity-types/lecture";
+import Discussion from "@/lib/model/activities/activity-types/discussion";
+import Studio from "@/lib/model/activities/activity-types/studio";
+import Lab from "@/lib/model/activities/activity-types/lab";
+import Midterm from "@/lib/model/exams/exam-types/midterm";
+import Final from "@/lib/model/exams/exam-types/final";
 
-function CourseForm() {
-  const courseRepo = new SimpleRepo();
-  courseRepo.fillExampleClasses();
+interface CourseFormProps {
+  courseRepository: SimpleRepo;
+  courseList: ICourse[];
+  setCourseList: (value: ICourse[]) => void;
+}
 
+function CourseForm({
+  courseRepository,
+  courseList,
+  setCourseList,
+}: CourseFormProps) {
   const [department, setDepartment] = useState("");
-  const [courseNumber, setCourseNumber] = useState("");
-  const [sectionNumber, setSectionNumber] = useState("");
+  const [courseNum, setCourseNum] = useState("");
+  const [sectionNum, setSectionNum] = useState("");
 
-  const [discussionSection, setDiscussionSection] = useState("");
-  const [labSection, setLabSection] = useState("");
-  const [studioSection, setStudioSection] = useState("");
+  const [lecture, setLecture] = useState("");
+  const [lab, setLab] = useState("");
+  const [discussion, setDiscussion] = useState("");
+  const [studio, setStudio] = useState("");
 
-  const [course, setCourse] = useState<Course | undefined>(undefined);
-  const [section, setSection] = useState<CourseSection | undefined>(undefined);
-
-  function handleSelect(setSelected: (value: string) => void, value: string) {
-    setSelected(value);
-
-    if (setSelected === setCourseNumber) {
-      setCourse(courseRepo.getCourse(`${department} ${value}`));
-    } else if (setSelected === setSectionNumber) {
-      setSection(course?.getSection(value));
-    }
-
-    resetSelections(setSelected);
+  function handleSelect(setValue: (value: string) => void, value: string) {
+    setValue(value);
+    resetSelects(setValue);
   }
 
-  function resetSelections(setSelected: (value: string) => void) {
-    if (setSelected === setDepartment) {
-      setCourseNumber("");
-      setSectionNumber("");
-      setDiscussionSection("");
-      setLabSection("");
-      setStudioSection("");
-      setCourse(undefined);
-      setSection(undefined);
-    }
-
-    if (setSelected === setCourseNumber) {
-      setSectionNumber("");
-      setDiscussionSection("");
-      setLabSection("");
-      setStudioSection("");
-      setSection(undefined);
-    }
-
-    if (setSelected === setSectionNumber) {
-      setDiscussionSection("");
-      setLabSection("");
-      setStudioSection("");
+  function resetSelects(setValue: (value: string) => void) {
+    if (setValue === setDepartment) {
+      setCourseNum("");
+      setSectionNum("");
+      resetActivites();
+    } else if (setValue === setCourseNum) {
+      setSectionNum("");
+      resetActivites();
+    } else if (setValue === setSectionNum) {
+      resetActivites();
     }
   }
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    if (
-      department === "" ||
-      courseNumber === "" ||
-      sectionNumber === "" ||
-      (discussionSection === "" && labSection === "" && studioSection === "")
-    ) {
-      console.log("onSubmit: Missing required fields");
-      return;
-    }
-
-    if (course === undefined || section === undefined) {
-      console.log("onSubmit: Invalid course or section");
-      return;
-    }
-
-    const newSection = new CourseSectionBuilder();
-
-    newSection.withSection(sectionNumber);
-    newSection.withLecture(SectionInfo.fromSectionInfo(section.lecture));
-
-    if (discussionSection !== "") {
-      const discussion = section.discussions.get(discussionSection);
-      if (discussion === undefined) {
-        console.log("onSubmit: Discussion not found");
-        return;
-      }
-
-      newSection.withDiscussions(
-        new Map([[discussionSection, SectionInfo.fromSectionInfo(discussion)]]),
-      );
-    }
-
-    if (labSection !== "") {
-      const lab = section.labs.get(labSection);
-      if (lab === undefined) {
-        console.log("onSubmit: Lab not found");
-        return;
-      }
-
-      newSection.withLabs(
-        new Map([[labSection, SectionInfo.fromSectionInfo(lab)]]),
-      );
-    }
-
-    if (studioSection !== "") {
-      const studio = section.studio.get(studioSection);
-      if (studio === undefined) {
-        console.log("onSubmit: Studio not found");
-        return;
-      }
-
-      newSection.withStudio(
-        new Map([[studioSection, SectionInfo.fromSectionInfo(studio)]]),
-      );
-    }
-
-    newSection.withMidterms(
-      section.midterms.map((midterm) => ExamInfo.fromExamInfo(midterm)),
-    );
-    newSection.withFinal(ExamInfo.fromExamInfo(section.final));
-
-    const newClass = new Course(
+  function onSubmit() {
+    let selectedCourse: ICourse | null = courseRepository.getCourseByTitle(
       department,
-      courseNumber,
-      new Map([[sectionNumber, newSection.build()]]),
+      courseNum,
     );
+    if (selectedCourse === null) {
+      return;
+    }
 
-    console.log(newClass);
+    let selectedSection: ISection | null =
+      selectedCourse.sections.find(
+        (section: ISection) => section.sectionNum === sectionNum,
+      ) || null;
+    if (selectedSection === null) {
+      return;
+    }
+
+    let newCourse: ICourse = new Course(department, courseNum);
+    let newSection: ISection = new Section(sectionNum);
+
+    selectedSection.activities.forEach((activity) => {
+      if (activity.type === "LE" && activity.sectionNum === lecture) {
+        newSection.addActivity(
+          new Lecture(
+            activity.sectionNum,
+            activity.daysOfWeek,
+            activity.timeOfDay,
+            activity.building,
+            activity.room,
+          ),
+        );
+      } else if (activity.type === "DI" && activity.sectionNum === discussion) {
+        newSection.addActivity(
+          new Discussion(
+            activity.sectionNum,
+            activity.daysOfWeek,
+            activity.timeOfDay,
+            activity.building,
+            activity.room,
+          ),
+        );
+      } else if (activity.type === "ST" && activity.sectionNum === studio) {
+        newSection.addActivity(
+          new Studio(
+            activity.sectionNum,
+            activity.daysOfWeek,
+            activity.timeOfDay,
+            activity.building,
+            activity.room,
+          ),
+        );
+      } else if (activity.type === "LA" && activity.sectionNum === lab) {
+        newSection.addActivity(
+          new Lab(
+            activity.sectionNum,
+            activity.daysOfWeek,
+            activity.timeOfDay,
+            activity.building,
+            activity.room,
+          ),
+        );
+      }
+    });
+
+    selectedSection.exams.forEach((exam) => {
+      if (exam.type === "MI") {
+        newSection.addExam(
+          new Midterm(
+            exam.date,
+            exam.dayOfWeek,
+            exam.timeOfDay,
+            exam.building,
+            exam.room,
+          ),
+        );
+      }
+
+      if (exam.type === "FI") {
+        newSection.addExam(
+          new Final(
+            exam.date,
+            exam.dayOfWeek,
+            exam.timeOfDay,
+            exam.building,
+            exam.room,
+          ),
+        );
+      }
+    });
+
+    newCourse.addSection(newSection);
+    setCourseList([...courseList, newCourse]);
+  }
+
+  function resetActivites() {
+    setLecture("");
+    setLab("");
+    setDiscussion("");
+    setStudio("");
   }
 
   return (
-    <div>
-      <form onSubmit={onSubmit} role="form">
-        <CourseDetails
-          repo={courseRepo}
-          department={department}
-          setDepartment={setDepartment}
-          courseNumber={courseNumber}
-          setCourseNumber={setCourseNumber}
-          handleSelect={handleSelect}
-        />
-
-        {course !== undefined && (
-          <LectureDetails
-            course={course}
-            sectionTitle={sectionNumber}
-            setSectionTitle={setSectionNumber}
-            handleSelect={handleSelect}
+    <div className={"course-form"}>
+      <h1>Course Selector</h1>
+      <CourseDetails
+        courseRepository={courseRepository}
+        department={department}
+        courseNum={courseNum}
+        sectionNum={sectionNum}
+        setDepartment={setDepartment}
+        setCourseNum={setCourseNum}
+        setSectionNum={setSectionNum}
+        handleSelect={handleSelect}
+      />
+      {sectionNum !== "" && (
+        <>
+          <ActivityDetails
+            activities={
+              courseRepository
+                .getCourseByTitle(department, courseNum)
+                ?.sections.find(
+                  (section: ISection) => section.sectionNum === sectionNum,
+                )?.activities || []
+            }
+            lecture={lecture}
+            lab={lab}
+            discussion={discussion}
+            studio={studio}
+            setLecture={setLecture}
+            setLab={setLab}
+            setDiscussion={setDiscussion}
+            setStudio={setStudio}
           />
-        )}
-
-        {section !== undefined && (
-          <SectionDetails
-            section={section}
-            discussionSection={discussionSection}
-            labSection={labSection}
-            studioSection={studioSection}
-            setDiscussionSection={setDiscussionSection}
-            setLabSection={setLabSection}
-            setStudioSection={setStudioSection}
+          <ExamDetails
+            exams={
+              courseRepository
+                .getCourseByTitle(department, courseNum)
+                ?.sections.find(
+                  (section: ISection) => section.sectionNum === sectionNum,
+                )?.exams || []
+            }
           />
-        )}
-        <button type="submit">Submit</button>
-      </form>
+        </>
+      )}
+      <Button onClick={onSubmit} className={"Submit"} ariaLabel={"Submit"}>
+        Submit
+      </Button>
     </div>
   );
 }
