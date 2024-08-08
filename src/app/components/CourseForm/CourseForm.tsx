@@ -155,7 +155,8 @@ function CourseForm({
   }
 
   return (
-    <div className={"CourseForm"}>
+    <div className={"course-form"}>
+      <h1>Course Selector</h1>
       <CourseDetails
         courseRepository={courseRepository}
         department={department}

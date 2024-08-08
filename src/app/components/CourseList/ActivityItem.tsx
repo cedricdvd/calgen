@@ -7,11 +7,11 @@ interface ActivityItemProps {
 function ActivityItem({ activity }: ActivityItemProps) {
   return (
     <div className="activity-item">
-      <div>{activity.sectionNum}</div>
-      <div>{activity.type}</div>
-      <div>{activity.daysOfWeek}</div>
-      <div>{activity.timeOfDay}</div>
-      <div>{activity.location}</div>
+      <p>{activity.sectionNum}</p>
+      <p>{activity.type}</p>
+      <p>{activity.daysOfWeek}</p>
+      <p>{activity.timeOfDay}</p>
+      <p>{activity.location}</p>
     </div>
   );
 }

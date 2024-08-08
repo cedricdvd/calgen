@@ -7,11 +7,11 @@ interface ExamItemProps {
 function ExamItem({ exam }: ExamItemProps) {
   return (
     <div className="exam-item">
-      <div>{exam.type}</div>
-      <div>{exam.dayOfWeek}</div>
-      <div>{exam.date}</div>
-      <div>{exam.timeOfDay}</div>
-      <div>{exam.location}</div>
+      <p>{exam.type}</p>
+      <p>{exam.dayOfWeek}</p>
+      <p>{exam.date}</p>
+      <p>{exam.timeOfDay}</p>
+      <p>{exam.location}</p>
     </div>
   );
 }

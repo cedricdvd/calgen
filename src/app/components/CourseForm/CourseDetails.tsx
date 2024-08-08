@@ -29,7 +29,7 @@ function CourseDetails({
         <p>No courses available</p>
       )}
       {courseRepository.getDepartments().length > 0 && (
-        <>
+        <div className="course-select">
           <p>Department</p>
           <Select
             options={courseRepository.getDepartments()}
@@ -39,10 +39,10 @@ function CourseDetails({
             disabledMessage={"Select a department"}
             ariaLabel={"Department"}
           />
-        </>
+        </div>
       )}
       {courseRepository.getCoursesByDepartment(department).length > 0 && (
-        <>
+        <div className="course-select">
           <p>Course Number</p>
           <Select
             options={courseRepository.getCourseNumbers(department)}
@@ -52,10 +52,10 @@ function CourseDetails({
             disabledMessage={"Select a course number"}
             ariaLabel={"CourseNum"}
           />
-        </>
+        </div>
       )}
       {courseRepository.getCourseByTitle(department, courseNum) !== null && (
-        <>
+        <div className="course-select">
           <p>Section Number</p>
           <Select
             options={
@@ -69,7 +69,7 @@ function CourseDetails({
             disabledMessage={"Select a section number"}
             ariaLabel={"SectionNum"}
           />
-        </>
+        </div>
       )}
     </div>
   );

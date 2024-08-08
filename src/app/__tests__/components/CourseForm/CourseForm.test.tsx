@@ -39,6 +39,7 @@ describe("Test CourseForm", () => {
       />,
     );
 
+    expect(screen.getByText("Course Selector")).toBeInTheDocument();
     expect(screen.getByText("Course")).toBeInTheDocument();
     expect(screen.getByText("No courses available")).toBeInTheDocument();
   });

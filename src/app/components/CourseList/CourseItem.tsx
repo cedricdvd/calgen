@@ -18,11 +18,11 @@ function CourseItem({ course }: CourseItemProps) {
       {section.activities.length > 0 && (
         <div className="activity-list">
           <div className="activity-header">
-            <div>Section</div>
-            <div>Type</div>
-            <div>Days of Week</div>
-            <div>Time</div>
-            <div>Location</div>
+            <p>Section</p>
+            <p>Type</p>
+            <p>Days of Week</p>
+            <p>Time</p>
+            <p>Location</p>
           </div>
           {section.activities.map((activity: IActivity, index: number) => (
             <ActivityItem key={index} activity={activity} />
@@ -33,11 +33,11 @@ function CourseItem({ course }: CourseItemProps) {
       {section.exams.length > 0 && (
         <div className="exam-list">
           <div className="exam-header">
-            <div>Type</div>
-            <div>Day of Week</div>
-            <div>Date</div>
-            <div>Time</div>
-            <div>Location</div>
+            <p>Type</p>
+            <p>Day of Week</p>
+            <p>Date</p>
+            <p>Time</p>
+            <p>Location</p>
           </div>
           {section.exams.map((exam: IExam, index: number) => (
             <ExamItem key={index} exam={exam} />

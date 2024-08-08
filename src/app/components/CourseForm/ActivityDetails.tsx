@@ -55,7 +55,7 @@ function ActivityDetails({
       <h2>Meetings</h2>
       {activities.length == 0 && <p>No meetings</p>}
       {lectures.length > 0 && (
-        <>
+        <div className="activity-select">
           <p>Lecture</p>
           <Select
             options={lectures.map((lecture) => lecture.sectionNum)}
@@ -73,10 +73,10 @@ function ActivityDetails({
               <p>{lectures.find((l) => l.sectionNum === lecture)?.timeOfDay}</p>
             </>
           )}
-        </>
+        </div>
       )}
       {labs.length > 0 && (
-        <>
+        <div className="activity-select">
           <p>Lab</p>
           <Select
             options={labs.map((lab) => lab.sectionNum)}
@@ -92,10 +92,10 @@ function ActivityDetails({
               <p>{labs.find((l) => l.sectionNum === lab)?.timeOfDay}</p>
             </>
           )}
-        </>
+        </div>
       )}
       {discussions.length > 0 && (
-        <>
+        <div className="activity-select">
           <p>Discussion</p>
           <Select
             options={discussions.map((discussion) => discussion.sectionNum)}
@@ -121,10 +121,10 @@ function ActivityDetails({
               </p>
             </>
           )}
-        </>
+        </div>
       )}
       {studios.length > 0 && (
-        <>
+        <div className="activity-select">
           <p>Studio</p>
           <Select
             options={studios.map((studio) => studio.sectionNum)}
@@ -140,7 +140,7 @@ function ActivityDetails({
               <p>{studios.find((s) => s.sectionNum === studio)?.timeOfDay}</p>
             </>
           )}
-        </>
+        </div>
       )}
     </div>
   );
