@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import CourseList from "@/app/components/CourseList/CourseList";
 import CourseForm from "@/app/components/CourseForm/CourseForm";
+import CourseCalendar from "../Calendar/CourseCalendar";
 
 import ICourse from "@/lib/model/courses/course-interface";
 import SimpleRepo from "@/lib/database/simple-repo";
@@ -20,6 +21,7 @@ function CourseDisplay() {
         setCourseList={setCourses}
         courseList={courses}
       />
+      <CourseCalendar courses={courses} />
     </div>
   );
 }
