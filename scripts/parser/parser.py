@@ -11,14 +11,14 @@ from constants import (
 )
 
 
-class IScraper:
-    def scrape(self, html: str) -> list[str]:
+class IParser:
+    def parse(self, html: str) -> list[str]:
         pass
 
 
-class DepartmentScraper(IScraper):
+class DepartmentParser(IParser):
     """
-    Scrape the department codes from a table on the UCSD Blink website.
+    Parse the department codes from a table on the UCSD Blink website.
 
     HTML Format:
     <tbody>
@@ -31,7 +31,7 @@ class DepartmentScraper(IScraper):
     </tbody>
     """
 
-    def scrape(self, html: str) -> list[str]:
+    def parse(self, html: str) -> list[str]:
         soup = bs(html, "html.parser")
         rows = soup.find_all("tr")
         subjects = re.findall(r"<td>([A-Z]{2,4})</td>", str(rows))
@@ -39,8 +39,8 @@ class DepartmentScraper(IScraper):
         return subjects
 
 
-class PageInfoScraper(IScraper):
-    def scrape(self, html: str) -> list[str]:
+class PageInfoParser(IParser):
+    def parse(self, html: str) -> list[str]:
         soup = bs(html, "html.parser")
         pageNumbers = str(soup.find("td", {"align": "right"}))
 
@@ -48,8 +48,8 @@ class PageInfoScraper(IScraper):
         return [pageNumbers[1]]
 
 
-class ScheduleScraper(IScraper):
-    def scrape(self, html: str) -> list[str]:
+class ScheduleParser(IParser):
+    def parse(self, html: str) -> list[str]:
         soup = bs(html, "html.parser")
 
         # Extract course code
@@ -67,8 +67,9 @@ class ScheduleScraper(IScraper):
         number = ""
         title = ""
         units = ""
+        course_section = ""
         meeting_type = ""
-        section = ""
+        meeting_section = ""
         date = ""
         days_of_week = ""
         time = ""
@@ -80,9 +81,10 @@ class ScheduleScraper(IScraper):
 
         for row in rows:
             if not row.has_attr("class"):
-                number, title, units = self.scrape_header(row)
+                number, title, units = self.parse_header(row)
+                course_section = ""
                 meeting_type = ""
-                section = ""
+                meeting_section = ""
                 date = ""
                 days_of_week = ""
                 time = ""
@@ -95,26 +97,31 @@ class ScheduleScraper(IScraper):
                 # Course meeting
                 (
                     meeting_type,
-                    section,
+                    meeting_section,
                     days_of_week,
                     time,
                     building,
                     room,
                     instructor,
-                ) = self.scrape_section(row)
+                ) = self.parse_section(row)
                 date = ""
 
                 if meeting_type == "":
                     continue
 
+                if course_section == "":
+                    course_section = meeting_section
+
                 output.append(
                     ";".join(
                         [
-                            f"{dept} {number}",
+                            dept,
+                            number,
                             title,
                             units,
+                            course_section,
                             meeting_type,
-                            section,
+                            meeting_section,
                             days_of_week,
                             time,
                             building,
@@ -126,16 +133,18 @@ class ScheduleScraper(IScraper):
             else:
                 # other meetings or exams
                 (meeting_type, days_of_week, date, time, building, room) = (
-                    self.scrape_other(row)
+                    self.parse_other(row)
                 )
                 instructor = ""
 
                 output.append(
                     ";".join(
                         [
-                            f"{dept} {number}",
+                            dept,
+                            number,
                             title,
                             units,
+                            course_section,
                             meeting_type,
                             days_of_week,
                             date,
@@ -148,7 +157,7 @@ class ScheduleScraper(IScraper):
 
         return output
 
-    def scrape_header(self, row) -> tuple[str]:
+    def parse_header(self, row) -> tuple[str]:
         cells = row.find_all("td", {"class": "crsheader"})
         if len(cells) < 4:
             return "", "", ""
@@ -163,7 +172,7 @@ class ScheduleScraper(IScraper):
 
         return number, title, units
 
-    def scrape_section(self, row) -> tuple[str]:
+    def parse_section(self, row) -> tuple[str]:
         output = ["", "", "", "", "", "", ""]
         cells = [item.text.strip() for item in row.find_all("td")]
         info = [item for item in cells if item != "" and item != "TBA"]
@@ -205,7 +214,7 @@ class ScheduleScraper(IScraper):
         print(output)
         return tuple(output)
 
-    def scrape_other(self, row) -> tuple[str]:
+    def parse_other(self, row) -> tuple[str]:
         cells = [item.text.strip() for item in row.find_all("td")]
         output = [item for item in cells if item != ""]
 

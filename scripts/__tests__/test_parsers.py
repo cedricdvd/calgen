@@ -1,10 +1,10 @@
 import os
+from parser import DepartmentParser, IParser, PageInfoParser, ScheduleParser
 
 import pytest
 from bs4 import BeautifulSoup as bs
 
 from constants import CAT_ROWS, CSE_ROWS, MATH_ROWS
-from scraper import DepartmentScraper, IScraper, PageInfoScraper, ScheduleScraper
 
 os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data"))
 
@@ -18,13 +18,13 @@ def get_soup(*args) -> bs:
     return bs(get_html(*args), "html.parser")
 
 
-def get_scraper(scraper_type: str) -> IScraper:
-    if scraper_type == "dpt":
-        return DepartmentScraper()
-    elif scraper_type == "page":
-        return PageInfoScraper()
-    elif scraper_type == "sch":
-        return ScheduleScraper()
+def get_parser(parser_type: str) -> IParser:
+    if parser_type == "dpt":
+        return DepartmentParser()
+    elif parser_type == "page":
+        return PageInfoParser()
+    elif parser_type == "sch":
+        return ScheduleParser()
     else:
         return None
 
@@ -35,12 +35,12 @@ def get_scraper(scraper_type: str) -> IScraper:
         ("ucsd_blink.html", ["SE", "SEV", "SIO", "SIOB", "SIOC"]),
     ],
 )
-def test_department_scraper(file, expected):
+def test_department_parser(file, expected):
     """
-    Test Department Scraper on subset of UCSD Blink HTML
+    Test Department Parser on subset of UCSD Blink HTML
     """
     html = get_html(file)
-    assert expected == get_scraper("dpt").scrape(html)
+    assert expected == get_parser("dpt").parse(html)
 
 
 @pytest.mark.parametrize(
@@ -51,13 +51,13 @@ def test_department_scraper(file, expected):
         ("ucsd_math.html", ["21"]),
     ],
 )
-def test_page_scraper(file, expected):
+def test_page_parser(file, expected):
     """
-    Test Page Scraper on Different Subjects
+    Test Page Parser on Different Subjects
     """
 
     html = get_html(file)
-    assert expected == get_scraper("page").scrape(html)
+    assert expected == get_parser("page").parse(html)
 
 
 @pytest.mark.parametrize(
@@ -68,12 +68,12 @@ def test_page_scraper(file, expected):
         ("nonenrtxt.html", ("", "", "")),
     ],
 )
-def test_header_scrape(file, expected):
+def test_header_parse(file, expected):
     """
-    Test that ScheduleScraper returns correct information
+    Test that ScheduleParser returns correct information
     """
     soup = get_soup("fragments", "header", file)
-    assert expected == get_scraper("sch").scrape_header(soup)
+    assert expected == get_parser("sch").parse_header(soup)
 
 
 @pytest.mark.parametrize(
@@ -92,12 +92,12 @@ def test_header_scrape(file, expected):
         ),
     ],
 )
-def test_section_scrape(file, expected):
+def test_section_parse(file, expected):
     """
-    Test that ScheduleScraper returns correct information
+    Test that ScheduleParser returns correct information
     """
     soup = get_soup("fragments", "section", file)
-    assert expected == get_scraper("sch").scrape_section(soup)
+    assert expected == get_parser("sch").parse_section(soup)
 
 
 @pytest.mark.parametrize(
@@ -113,12 +113,12 @@ def test_section_scrape(file, expected):
         ),
     ],
 )
-def test_other_scrape(file, expected):
+def test_other_parse(file, expected):
     """
-    Test that ScheduleScraper returns correct information
+    Test that ScheduleParser returns correct information
     """
     soup = get_soup("fragments", "other", file)
-    assert expected == get_scraper("sch").scrape_other(soup)
+    assert expected == get_parser("sch").parse_other(soup)
 
 
 @pytest.mark.parametrize(
@@ -129,9 +129,9 @@ def test_other_scrape(file, expected):
         ("ucsd_math.html", MATH_ROWS),
     ],
 )
-def test_schedule_scrape(file, expected):
+def test_schedule_parse(file, expected):
     """
-    Test that ScheduleScraper returns correct information
+    Test that ScheduleParser returns correct information
     """
     html = get_html(file)
-    assert expected == get_scraper("sch").scrape(html)
+    assert expected == get_parser("sch").parse(html)
