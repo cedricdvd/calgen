@@ -1,1 +1,1 @@
-from .parser import *
+from .parser import DepartmentParser, IParser, PageInfoParser, ScheduleParser
