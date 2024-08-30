@@ -44,6 +44,9 @@ class Exam:
             self._room,
         )
 
+    def __str__(self) -> str:
+        return f"({self._id}) [{self._section_id}] {self._meeting_type} {self._date} ({self._days_of_week}) {self._time} at {self._building} {self._room}"
+
     def get_section_id(self) -> int:
         return self._section_id
 

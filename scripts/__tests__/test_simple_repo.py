@@ -69,7 +69,7 @@ def test_add_department(generate_departments):
     repo = SimpleRepo()
 
     for department, expected_id, expected_next_id in generate_departments:
-        assert repo.add_department(department)
+        assert repo.add_department(department) == department.with_id(expected_id)
         assert repo._departments[expected_id] == department.with_id(expected_id)
         assert repo._departments[expected_id].get_id() == expected_id
         assert repo._next_department_id == expected_next_id
@@ -83,7 +83,7 @@ def test_add_departments(generate_departments):
     departments = [department for department, _, _ in generate_departments]
     repo.add_departments(departments)
 
-    for department, expected_id, expected_next_id in generate_departments:
+    for department, expected_id, _ in generate_departments:
         assert repo._departments[expected_id] == department.with_id(expected_id)
         assert repo._departments[expected_id].get_id() == expected_id
 
@@ -94,7 +94,7 @@ def test_add_course(generate_courses):
     repo = SimpleRepo()
 
     for course, expected_id, expected_next_id in generate_courses:
-        assert repo.add_course(course)
+        assert repo.add_course(course) == course.with_id(expected_id)
         assert repo._courses[expected_id] == course.with_id(expected_id)
         assert repo._courses[expected_id].get_id() == expected_id
         assert repo._next_course_id == expected_next_id
@@ -108,7 +108,7 @@ def test_add_courses(generate_courses):
     courses = [course for course, _, _ in generate_courses]
     repo.add_courses(courses)
 
-    for course, expected_id, expected_next_id in generate_courses:
+    for course, expected_id, _ in generate_courses:
         assert repo._courses[expected_id] == course.with_id(expected_id)
         assert repo._courses[expected_id].get_id() == expected_id
 
@@ -119,7 +119,7 @@ def test_add_section(generate_sections):
     repo = SimpleRepo()
 
     for section, expected_id, expected_next_id in generate_sections:
-        assert repo.add_section(section)
+        assert repo.add_section(section) == section.with_id(expected_id)
         assert repo._sections[expected_id] == section.with_id(expected_id)
         assert repo._sections[expected_id].get_id() == expected_id
         assert repo._next_section_id == expected_next_id
@@ -133,7 +133,7 @@ def test_add_sections(generate_sections):
     sections = [section for section, _, _ in generate_sections]
     repo.add_sections(sections)
 
-    for section, expected_id, expected_next_id in generate_sections:
+    for section, expected_id, _ in generate_sections:
         assert repo._sections[expected_id] == section.with_id(expected_id)
         assert repo._sections[expected_id].get_id() == expected_id
 
@@ -144,7 +144,7 @@ def test_add_activity(generate_activities):
     repo = SimpleRepo()
 
     for activity, expected_id, expected_next_id in generate_activities:
-        assert repo.add_activity(activity)
+        assert repo.add_activity(activity) == activity.with_id(expected_id)
         assert repo._activities[expected_id] == activity.with_id(expected_id)
         assert repo._activities[expected_id].get_id() == expected_id
         assert repo._next_activity_id == expected_next_id
@@ -158,7 +158,7 @@ def test_add_activities(generate_activities):
     activities = [activity for activity, _, _ in generate_activities]
     repo.add_activities(activities)
 
-    for activity, expected_id, expected_next_id in generate_activities:
+    for activity, expected_id, _ in generate_activities:
         assert repo._activities[expected_id] == activity.with_id(expected_id)
         assert repo._activities[expected_id].get_id() == expected_id
 
@@ -169,7 +169,7 @@ def test_add_exam(generate_exams):
     repo = SimpleRepo()
 
     for exam, expected_id, expected_next_id in generate_exams:
-        assert repo.add_exam(exam)
+        assert repo.add_exam(exam) == exam.with_id(expected_id)
         assert repo._exams[expected_id] == exam.with_id(expected_id)
         assert repo._exams[expected_id].get_id() == expected_id
         assert repo._next_exam_id == expected_next_id
@@ -183,7 +183,7 @@ def test_add_exams(generate_exams):
     exams = [exam for exam, _, _ in generate_exams]
     repo.add_exams(exams)
 
-    for exam, expected_id, expected_next_id in generate_exams:
+    for exam, expected_id, _ in generate_exams:
         assert repo._exams[expected_id] == exam.with_id(expected_id)
         assert repo._exams[expected_id].get_id() == expected_id
 

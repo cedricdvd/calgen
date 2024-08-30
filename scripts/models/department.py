@@ -12,6 +12,9 @@ class Department:
     def __hash__(self) -> int:
         return hash(self._code, self._title)
 
+    def __str__(self) -> str:
+        return f"({self._id}) {self._code} - {self._title}"
+
     def get_code(self) -> str:
         return self._code
 

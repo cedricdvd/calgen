@@ -34,7 +34,14 @@ class DepartmentParser(IParser):
     def parse(self, html: str) -> list[str]:
         soup = bs(html, "html.parser")
         rows = soup.find_all("tr")
-        subjects = re.findall(r"<td>([A-Z]{2,4})</td>", str(rows))
+
+        subjects = []
+
+        for row in rows:
+            cells = row.find_all("td")
+            code = cells[0].text.strip()
+            title = re.sub(r"\s+", " ", cells[1].text.strip())
+            subjects.append(";".join([code, title]))
 
         return subjects
 
@@ -132,6 +139,9 @@ class ScheduleParser(IParser):
                 )
             else:
                 # other meetings or exams
+                if len(row.find_all("td")) < 3:
+                    continue
+
                 (meeting_type, days_of_week, date, time, building, room) = (
                     self.parse_other(row)
                 )
@@ -211,7 +221,6 @@ class ScheduleParser(IParser):
             else:
                 index += 1
 
-        print(output)
         return tuple(output)
 
     def parse_other(self, row) -> tuple[str]:

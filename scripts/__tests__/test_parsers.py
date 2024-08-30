@@ -4,7 +4,7 @@ from parser import DepartmentParser, IParser, PageInfoParser, ScheduleParser
 import pytest
 from bs4 import BeautifulSoup as bs
 
-from constants import CAT_ROWS, CSE_ROWS, MATH_ROWS
+from constants import BILD_ROWS, CAT_ROWS, CSE_ROWS, MATH_ROWS
 
 os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data"))
 
@@ -32,7 +32,16 @@ def get_parser(parser_type: str) -> IParser:
 @pytest.mark.parametrize(
     "file,expected",
     [
-        ("ucsd_blink.html", ["SE", "SEV", "SIO", "SIOB", "SIOC"]),
+        (
+            "ucsd_blink.html",
+            [
+                "SE;Structural Engineering",
+                "SEV;Seventh College",
+                "SIO;Scripps Institution of Oceanography",
+                "SIOB;Scripps Institution of Oceanography/ Ocean Biosciences Program",
+                "SIOC;Scripps Institution of Oceanography/ Climate, Oceans, Atmosphere Program",
+            ],
+        ),
     ],
 )
 def test_department_parser(file, expected):
@@ -49,6 +58,7 @@ def test_department_parser(file, expected):
         ("ucsd_cat.html", ["4"]),
         ("ucsd_cse.html", ["31"]),
         ("ucsd_math.html", ["21"]),
+        ("ucsd_bild.html", ["3"]),
     ],
 )
 def test_page_parser(file, expected):
@@ -127,6 +137,7 @@ def test_other_parse(file, expected):
         ("ucsd_cse.html", CSE_ROWS),
         ("ucsd_cat.html", CAT_ROWS),
         ("ucsd_math.html", MATH_ROWS),
+        ("ucsd_bild.html", BILD_ROWS),
     ],
 )
 def test_schedule_parse(file, expected):

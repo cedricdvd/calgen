@@ -5,4 +5,4 @@ from .parser_constants import (
     TIME_PATTERN,
     WAITLIST_PATTERN,
 )
-from .pytest_constants import CAT_ROWS, CSE_ROWS, MATH_ROWS
+from .pytest_constants import BILD_ROWS, CAT_ROWS, CSE_ROWS, MATH_ROWS

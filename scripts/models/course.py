@@ -1,6 +1,6 @@
 class Course:
     def __init__(
-        self, department_id: int, num: int, title: str, units: int, id: int = -1
+        self, department_id: int, num: str, title: str, units: int, id: int = -1
     ):
         self._department_id = department_id
         self._num = num
@@ -22,10 +22,13 @@ class Course:
     def __hash__(self) -> int:
         return hash(self._department_id, self._num, self._title, self._units)
 
+    def __str__(self) -> str:
+        return f"({self._id}) [{self._department_id}|{self._num}] {self._title} ({self._units} units)"
+
     def get_department_id(self) -> int:
         return self._department_id
 
-    def get_num(self) -> int:
+    def get_num(self) -> str:
         return self._num
 
     def get_title(self) -> str:
