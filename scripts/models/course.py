@@ -23,7 +23,9 @@ class Course:
         return hash((self._department_id, self._num, self._title, self._units))
 
     def __str__(self) -> str:
-        return f"({self._id}) [{self._department_id}|{self._num}] {self._title} ({self._units} units)"
+        return "({0}) [{1}|{2}] {3} ({4} units)".format(
+            self._id, self._department_id, self._num, self._title, self._units
+        )
 
     def get_department_id(self) -> int:
         return self._department_id

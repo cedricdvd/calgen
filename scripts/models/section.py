@@ -14,7 +14,7 @@ class Section:
         return hash((self._course_id, self._num))
 
     def __str__(self) -> str:
-        return f"({self._id}) [{self._course_id}] {self._num}"
+        return "({0}) [{1}] {2}".format(self._id, self._course_id, self._num)
 
     def get_course_id(self) -> int:
         return self._course_id

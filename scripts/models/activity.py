@@ -51,7 +51,17 @@ class Activity:
         )
 
     def __str__(self) -> str:
-        return f"({self._id}) [{self._section_id}|{self._section_num}] {self._meeting_type} {self._days_of_week} {self._time} at {self._building} {self._room} with {self._instructor}"
+        return "({0}) [{1}|{2}] {3} {4} {5} at {6} {7} with {8}".format(
+            self._id,
+            self._section_id,
+            self._section_num,
+            self._meeting_type,
+            self._days_of_week,
+            self._time,
+            self._building,
+            self._room,
+            self._instructor,
+        )
 
     def get_section_id(self) -> int:
         return self._section_id

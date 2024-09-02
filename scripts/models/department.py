@@ -16,7 +16,7 @@ class Department:
         return hash((self._code, self._title))
 
     def __str__(self) -> str:
-        return f"({self._id}) {self._code} - {self._title}"
+        return "({0}) {1} - {2}".format(self._id, self._code, self._title)
 
     def get_code(self) -> str:
         return self._code

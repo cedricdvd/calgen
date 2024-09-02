@@ -66,6 +66,10 @@ jobs:
         working-directory: ./scripts
         run: flake8
 
+      - name: Run mypy
+        working-directory: ./scripts
+        run: mypy .
+
   scraper-test:
     runs-on: ubuntu-latest
 
