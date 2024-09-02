@@ -38,14 +38,16 @@ class Activity:
 
     def __hash__(self) -> int:
         return hash(
-            self._section_id,
-            self._meeting_type,
-            self._section_num,
-            self._days_of_week,
-            self._time,
-            self._building,
-            self._room,
-            self._instructor,
+            (
+                self._section_id,
+                self._meeting_type,
+                self._section_num,
+                self._days_of_week,
+                self._time,
+                self._building,
+                self._room,
+                self._instructor,
+            )
         )
 
     def __str__(self) -> str:

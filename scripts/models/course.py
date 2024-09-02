@@ -8,7 +8,7 @@ class Course:
         self._units = units
         self._id = id
 
-    def __eq__(self, other) -> str:
+    def __eq__(self, other) -> bool:
         if not isinstance(other, Course):
             return False
 
@@ -20,7 +20,7 @@ class Course:
         )
 
     def __hash__(self) -> int:
-        return hash(self._department_id, self._num, self._title, self._units)
+        return hash((self._department_id, self._num, self._title, self._units))
 
     def __str__(self) -> str:
         return f"({self._id}) [{self._department_id}|{self._num}] {self._title} ({self._units} units)"

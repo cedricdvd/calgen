@@ -7,10 +7,13 @@ class Department:
         self._id = id
 
     def __eq__(self, other) -> bool:
+        if not isinstance(other, Department):
+            return False
+
         return self._code == other._code and self._title == other._title
 
     def __hash__(self) -> int:
-        return hash(self._code, self._title)
+        return hash((self._code, self._title))
 
     def __str__(self) -> str:
         return f"({self._id}) {self._code} - {self._title}"

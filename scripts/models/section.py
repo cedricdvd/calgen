@@ -4,14 +4,14 @@ class Section:
         self._num = num
         self._id = id
 
-    def __eq__(self, other) -> str:
+    def __eq__(self, other) -> bool:
         if not isinstance(other, Section):
             return False
 
         return self._course_id == other._course_id and self._num == other._num
 
     def __hash__(self) -> int:
-        return hash(self._course_id, self._num)
+        return hash((self._course_id, self._num))
 
     def __str__(self) -> str:
         return f"({self._id}) [{self._course_id}] {self._num}"

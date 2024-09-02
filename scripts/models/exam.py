@@ -19,7 +19,7 @@ class Exam:
         self._room = room
         self._id = id
 
-    def __eq__(self, other) -> str:
+    def __eq__(self, other) -> bool:
         if not isinstance(other, Exam):
             return False
 
@@ -35,13 +35,15 @@ class Exam:
 
     def __hash__(self) -> int:
         return hash(
-            self._section_id,
-            self._meeting_type,
-            self._days_of_week,
-            self._date,
-            self._time,
-            self._building,
-            self._room,
+            (
+                self._section_id,
+                self._meeting_type,
+                self._days_of_week,
+                self._date,
+                self._time,
+                self._building,
+                self._room,
+            )
         )
 
     def __str__(self) -> str:

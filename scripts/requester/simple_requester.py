@@ -3,11 +3,11 @@ from requests.compat import urljoin
 
 
 class SimpleRequester:
-    def __init__(self, base_url: str = None, session: requests.Session = None):
+    def __init__(self, base_url: str | None = None, session: requests.Session = None):
         self.base_url = base_url
         self.session = session if session else requests.Session()
 
-    def get(self, path: str = "") -> str:
+    def get(self, path: str = "") -> str | None:
         url = urljoin(self.base_url, path)
 
         try:
@@ -17,4 +17,4 @@ class SimpleRequester:
             print(f"Error: {e}")
             return None
 
-        return response.text
+        return str(response.text)

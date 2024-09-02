@@ -18,7 +18,7 @@ def get_soup(*args) -> bs:
     return bs(get_html(*args), "html.parser")
 
 
-def get_parser(parser_type: str) -> IParser:
+def get_parser(parser_type: str) -> IParser | None:
     if parser_type == "dpt":
         return DepartmentParser()
     elif parser_type == "page":

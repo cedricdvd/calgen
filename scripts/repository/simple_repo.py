@@ -67,7 +67,7 @@ class SimpleRepo:
         for exam in exams:
             self.add_exam(exam)
 
-    def get_department(self, id: int) -> Department:
+    def get_department(self, id: int) -> Department | None:
         if id in self._departments:
             return self._departments[id]
 
@@ -76,14 +76,14 @@ class SimpleRepo:
     def get_departments(self) -> list[Department]:
         return list(self._departments.values())
 
-    def get_department_by_code(self, code: str) -> Department:
+    def get_department_by_code(self, code: str) -> Department | None:
         for department in self._departments.values():
             if department.get_code() == code:
                 return department
 
         return None
 
-    def get_course(self, id: int) -> Course:
+    def get_course(self, id: int) -> Course | None:
         if id in self._courses:
             return self._courses[id]
 
@@ -99,7 +99,7 @@ class SimpleRepo:
             if course.get_department_id() == department_id
         ]
 
-    def get_section(self, id: int) -> Section:
+    def get_section(self, id: int) -> Section | None:
         if id in self._sections:
             return self._sections[id]
 
@@ -115,7 +115,7 @@ class SimpleRepo:
             if section.get_course_id() == course_id
         ]
 
-    def get_activity(self, id: int) -> Activity:
+    def get_activity(self, id: int) -> Activity | None:
         if id in self._activities:
             return self._activities[id]
 
@@ -131,7 +131,7 @@ class SimpleRepo:
             if activity.get_section_id() == section_id
         ]
 
-    def get_exam(self, id: int) -> Exam:
+    def get_exam(self, id: int) -> Exam | None:
         if id in self._exams:
             return self._exams[id]
 

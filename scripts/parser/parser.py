@@ -1,4 +1,5 @@
 import re
+from abc import ABC, abstractmethod
 
 from bs4 import BeautifulSoup as bs
 
@@ -11,7 +12,9 @@ from constants import (
 )
 
 
-class IParser:
+class IParser(ABC):
+
+    @abstractmethod
     def parse(self, html: str) -> list[str]:
         pass
 
@@ -47,15 +50,24 @@ class DepartmentParser(IParser):
 
 
 class PageInfoParser(IParser):
+    """
+    Parse the number of pages per department
+    """
+
     def parse(self, html: str) -> list[str]:
         soup = bs(html, "html.parser")
         pageNumbers = str(soup.find("td", {"align": "right"}))
 
-        pageNumbers = re.findall(r"\d+", pageNumbers)
-        return [pageNumbers[1]]
+        # Extract total number of pages (e.g. 1 of 30)
+        total_pages = re.findall(r"\d+", pageNumbers)[1]
+        return [total_pages]
 
 
 class ScheduleParser(IParser):
+    """
+    Parse course activities and exams from table on the UCSD Blink website
+    """
+
     def parse(self, html: str) -> list[str]:
         soup = bs(html, "html.parser")
 
@@ -64,11 +76,18 @@ class ScheduleParser(IParser):
         if table_html is None:
             return []
 
+        # Gather table rows
         table = table_html.find_all("tr")
 
         dept_row = table[1].find("h2").text
-        dept = re.search(r"\(([A-Z]{2,4}).*\)", dept_row).expand(r"\1")
+        dept_search = re.search(r"([A-Z]{2,4})", dept_row)
 
+        if dept_search is None:
+            return []
+
+        dept = dept_search.expand(r"\1")
+
+        # Initialize scraper variables
         rows = table[4:]
 
         number = ""
@@ -87,6 +106,7 @@ class ScheduleParser(IParser):
         output = []
 
         for row in rows:
+            # Check if row is a header
             if not row.has_attr("class"):
                 number, title, units = self.parse_header(row)
                 course_section = ""
@@ -100,6 +120,7 @@ class ScheduleParser(IParser):
                 instructor = ""
                 continue
 
+            # Check if row is a course meeting or section
             elif row["class"][0] == "sectxt":
                 # Course meeting
                 (
@@ -113,12 +134,14 @@ class ScheduleParser(IParser):
                 ) = self.parse_section(row)
                 date = ""
 
+                # Skip if meeting tpye is empty
                 if meeting_type == "":
                     continue
 
                 if course_section == "":
                     course_section = meeting_section
 
+                # Create course activity
                 output.append(
                     ";".join(
                         [
@@ -137,8 +160,11 @@ class ScheduleParser(IParser):
                         ]
                     )
                 )
+
+            # Check if row is an exam
             else:
-                # other meetings or exams
+
+                # Skip if row is not an exam (not enough columns)
                 if len(row.find_all("td")) < 3:
                     continue
 
@@ -147,6 +173,7 @@ class ScheduleParser(IParser):
                 )
                 instructor = ""
 
+                # Create exam row
                 output.append(
                     ";".join(
                         [
@@ -167,7 +194,15 @@ class ScheduleParser(IParser):
 
         return output
 
-    def parse_header(self, row) -> tuple[str]:
+    def parse_header(self, row) -> tuple[str, ...]:
+        """Get course number, title, and units from header row
+
+        Args:
+            row (_type_): HTML row element
+
+        Returns:
+            tuple[str]: Tuple containing course number, title, and units
+        """
         cells = row.find_all("td", {"class": "crsheader"})
         if len(cells) < 4:
             return "", "", ""
@@ -178,20 +213,30 @@ class ScheduleParser(IParser):
 
         title = title_cell.find("span").text.strip()
         title_text = re.sub(r"\s+", " ", title_cell.text)
-        units = re.search(r"\(.*(\d+).*Units\)", title_text).expand(r"\1")
+        units_search = re.search(r"\(.*(\d+).*Units\)", title_text)
+
+        if units_search is None:
+            return "", "", ""
+
+        units = units_search.expand(r"\1")
 
         return number, title, units
 
-    def parse_section(self, row) -> tuple[str]:
+    def parse_section(self, row) -> tuple[str, ...]:
+        """
+        Get course meeting information from row
+        """
         output = ["", "", "", "", "", "", ""]
         cells = [item.text.strip() for item in row.find_all("td")]
         info = [item for item in cells if item != "" and item != "TBA"]
 
+        # Ignore row if cancelled
         if "Cancelled" in info:
             return tuple(output)
 
         index = 0
 
+        # Find instruction code
         while index < len(info) and info[index] not in INSTRUCTION_CODES:
             index += 1
 
@@ -223,7 +268,8 @@ class ScheduleParser(IParser):
 
         return tuple(output)
 
-    def parse_other(self, row) -> tuple[str]:
+    def parse_other(self, row) -> tuple[str, ...]:
+        # Get exam information from row
         cells = [item.text.strip() for item in row.find_all("td")]
         output = [item for item in cells if item != ""]
 

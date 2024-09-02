@@ -20,11 +20,11 @@ def generate_departments() -> list[tuple[Department, int, int]]:
 @pytest.fixture
 def generate_courses() -> list[tuple[Course, int, int]]:
     return [
-        (Course(1, 110, "Software Engineering", 4), 0, 1),
-        (Course(2, 120, "Math Course", 4), 1, 2),
-        (Course(1, 130, "Computer Lab", 2, 5), 2, 3),
-        (Course(6, 140, "Physics Lab", 2, 3), 3, 4),
-        (Course(7, 150, "Bioengineering Lab", 3), 4, 5),
+        (Course(1, "110", "Software Engineering", 4), 0, 1),
+        (Course(2, "120", "Math Course", 4), 1, 2),
+        (Course(1, "130", "Computer Lab", 2, 5), 2, 3),
+        (Course(6, "140", "Physics Lab", 2, 3), 3, 4),
+        (Course(7, "150", "Bioengineering Lab", 3), 4, 5),
     ]
 
 
@@ -44,8 +44,12 @@ def generate_activities() -> list[tuple[Activity, int, int]]:
     return [
         (Activity(1, "LE", "A00", "MWF", "7:00a-8:00a", "BLD", "1", "TBA"), 0, 1),
         (Activity(1, "DI", "A01", "Tu", "7:00a-8:00a", "BLD", "2", "TBA"), 1, 2),
-        (Activity(2, "LA", "B00", "MW", "7:00p-10:00p", "FAH", "3001", 5), 2, 3),
-        (Activity(6, "LA", "B01", "S", "3:00p-6:00p", "WLH", "2001", 3), 3, 4),
+        (
+            Activity(2, "LA", "B00", "MW", "7:00p-10:00p", "FAH", "3001", "Staff", 5),
+            2,
+            3,
+        ),
+        (Activity(6, "LA", "B01", "S", "3:00p-6:00p", "WLH", "2001", "Staff", 3), 3, 4),
         (
             Activity(7, "ST", "C00", "ThF", "7:00p-9:00p", "BLD", "3", "Instructor"),
             4,
