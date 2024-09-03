@@ -253,8 +253,12 @@ class ScheduleParser(IParser):
         Get course meeting information from row
         """
         output = ["", "", "", "", "", "", ""]
+
+        # Get and clean course meeting information from row
         cells = [item.text.strip() for item in row.find_all("td")]
-        info = [item for item in cells if item != "" and item != "TBA"]
+        info = [
+            re.sub(r"\s+", " ", item) for item in cells if item != "" and item != "TBA"
+        ]
 
         # Ignore row if cancelled
         if "Cancelled" in info:
@@ -274,6 +278,7 @@ class ScheduleParser(IParser):
         index += 2
 
         # Organize remaining information
+
         while index < len(info):
             if re.match(DAYS_PATTERN, info[index]):
                 output[2] = info[index]
