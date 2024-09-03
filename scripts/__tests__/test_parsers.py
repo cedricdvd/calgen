@@ -6,11 +6,11 @@ from bs4 import BeautifulSoup as bs
 
 from constants import BILD_ROWS, CAT_ROWS, CSE_ROWS, MATH_ROWS
 
-os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data"))
+DATA_PATH = os.path.join(os.path.dirname(__file__), "data")
 
 
 def get_html(*args) -> str:
-    with open(os.path.abspath(os.path.join(*args)), "r") as f:
+    with open(os.path.abspath(os.path.join(DATA_PATH, *args)), "r") as f:
         return "\n".join(f.readlines())
 
 

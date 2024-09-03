@@ -1,3 +1,4 @@
+from .constants import SCHEDULE_URL, SUBJECT_CODES_URL
 from .parser_constants import (
     DAYS_PATTERN,
     INSTRUCTION_CODES,

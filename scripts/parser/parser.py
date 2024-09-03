@@ -46,6 +46,10 @@ class DepartmentParser(IParser):
 
         for row in rows:
             cells = row.find_all("td")
+
+            if len(cells) < 2:
+                continue
+
             code = cells[0].text.strip()
             title = re.sub(r"\s+", " ", cells[1].text.strip())
             subjects.append(";".join([code, title]))
