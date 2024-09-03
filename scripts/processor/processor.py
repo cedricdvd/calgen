@@ -1,7 +1,10 @@
+import logging
 from abc import ABC, abstractmethod
 
 from models import Activity, Course, Department, Exam, Section
 from repository import SimpleRepo
+
+logger = logging.getLogger(__name__)
 
 
 class IProcessor(ABC):
@@ -24,7 +27,8 @@ class DepartmentProcessor(IProcessor):
 
     def process_and_store(self, data: str):
         department = self.transform(data)
-        self._repo.add_department(department)
+        department = self._repo.add_department(department)
+        logger.debug("Department added: %s", department)
 
     def transform(self, data: str) -> Department:
         code, title = data.split(";")
@@ -45,7 +49,8 @@ class CourseProcessor(IProcessor):
                 "Number;Title;Units"
         """
         course = self.transform(data)
-        self._repo.add_course(course)
+        course = self._repo.add_course(course)
+        logger.debug("Course added: %s", course)
 
     def transform(self, data: str) -> Course:
         """Transforms data into Course Model
@@ -79,7 +84,8 @@ class SectionProcessor(IProcessor):
                 "Number"
         """
         section = self.transform(data)
-        self._repo.add_section(section)
+        section = self._repo.add_section(section)
+        logger.debug("Section added: %s", section)
 
     def transform(self, data: str) -> Section:
         """Transforms data into Section Model
@@ -113,7 +119,8 @@ class ActivityProcessor(IProcessor):
                 "Type;SectionNum;Days;Time;Building;Room;Instructor"
         """
         activity = self.transform(data)
-        self._repo.add_activity(activity)
+        activity = self._repo.add_activity(activity)
+        logger.debug("Activity added: %s", activity)
 
     def transform(self, data: str) -> Activity:
         """Transforms data into Activity Model
@@ -158,7 +165,8 @@ class ExamProcessor(IProcessor):
                 "Type;Date;DayOfWeek;Time;Building;Room"
         """
         exam = self.transform(data)
-        self._repo.add_exam(exam)
+        exam = self._repo.add_exam(exam)
+        logger.debug("Exam added: %s", exam)
 
     def transform(self, data: str) -> Exam:
         """Transforms data into Exam Model

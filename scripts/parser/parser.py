@@ -1,3 +1,4 @@
+import logging
 import re
 from abc import ABC, abstractmethod
 
@@ -10,6 +11,8 @@ from constants import (
     TIME_PATTERN,
     WAITLIST_PATTERN,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class IParser(ABC):
@@ -35,6 +38,7 @@ class DepartmentParser(IParser):
     """
 
     def parse(self, html: str) -> list[str]:
+        logger.info("Parsing department codes")
         soup = bs(html, "html.parser")
         rows = soup.find_all("tr")
 
@@ -45,6 +49,7 @@ class DepartmentParser(IParser):
             code = cells[0].text.strip()
             title = re.sub(r"\s+", " ", cells[1].text.strip())
             subjects.append(";".join([code, title]))
+            logger.debug(f"Parsed department: {code} - {title}")
 
         return subjects
 
@@ -55,11 +60,13 @@ class PageInfoParser(IParser):
     """
 
     def parse(self, html: str) -> list[str]:
+        logger.info("Parsing page numbers")
         soup = bs(html, "html.parser")
         pageNumbers = str(soup.find("td", {"align": "right"}))
 
         # Extract total number of pages (e.g. 1 of 30)
         total_pages = re.findall(r"\d+", pageNumbers)[1]
+        logger.debug(f"Total pages: {total_pages}")
         return [total_pages]
 
 
@@ -69,6 +76,7 @@ class ScheduleParser(IParser):
     """
 
     def parse(self, html: str) -> list[str]:
+        logger.info("Parsing course activities")
         soup = bs(html, "html.parser")
 
         # Extract course code
@@ -118,6 +126,8 @@ class ScheduleParser(IParser):
                 building = ""
                 room = ""
                 instructor = ""
+
+                logging.debug(f"Parsed course header: {number} - {title} - {units}")
                 continue
 
             # Check if row is a course meeting or section
@@ -134,11 +144,13 @@ class ScheduleParser(IParser):
                 ) = self.parse_section(row)
                 date = ""
 
-                # Skip if meeting tpye is empty
+                # Skip if meeting type is empty
                 if meeting_type == "":
+                    logger.debug("Skipping empty meeting type")
                     continue
 
                 if course_section == "":
+                    logger.debug("Setting course section")
                     course_section = meeting_section
 
                 # Create course activity
@@ -161,11 +173,15 @@ class ScheduleParser(IParser):
                     )
                 )
 
+                logging.debug(
+                    f"Logged course activity: {meeting_type} - {meeting_section} - {days_of_week} - {time} - {building} - {room} - {instructor}"
+                )
+
             # Check if row is an exam
             else:
-
                 # Skip if row is not an exam (not enough columns)
                 if len(row.find_all("td")) < 3:
+                    logging.info("Skipping row with less than 3 columns")
                     continue
 
                 (meeting_type, days_of_week, date, time, building, room) = (
@@ -192,6 +208,10 @@ class ScheduleParser(IParser):
                     )
                 )
 
+                logging.debug(
+                    f"Logged exam: {meeting_type} - {days_of_week} - {date} - {time} - {building} - {room}"
+                )
+
         return output
 
     def parse_header(self, row) -> tuple[str, ...]:
@@ -205,6 +225,7 @@ class ScheduleParser(IParser):
         """
         cells = row.find_all("td", {"class": "crsheader"})
         if len(cells) < 4:
+            logging.debug("Skipping header with less than 4 columns")
             return "", "", ""
 
         number = cells[1].text.strip()
@@ -216,6 +237,7 @@ class ScheduleParser(IParser):
         units_search = re.search(r"\(.*(\d+).*Units\)", title_text)
 
         if units_search is None:
+            logging.debug("Skipping header with no units")
             return "", "", ""
 
         units = units_search.expand(r"\1")
@@ -232,6 +254,7 @@ class ScheduleParser(IParser):
 
         # Ignore row if cancelled
         if "Cancelled" in info:
+            logging.debug("Skipping cancelled course")
             return tuple(output)
 
         index = 0
